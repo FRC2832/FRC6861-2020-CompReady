@@ -109,7 +109,13 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
       driveTrain.driveTank();
       colorWheel.colorWheelSpin();
-      climber.climber();
+
+      try {
+        climber.climber();
+      } catch (Exception e) {
+        System.out.println("Climber Exception. More info: " + e.getMessage());
+      }
+      
       ingester.ingesterSweep();
       pid.commonLoop();
       skywalker.SkyWalk();

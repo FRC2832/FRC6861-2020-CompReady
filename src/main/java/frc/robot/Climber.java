@@ -29,45 +29,70 @@ public class Climber {
         m_latch = new Relay(0);
         m_encoder.setPosition(0.0);
         SmartDashboard.putNumber("Light Saber Init", 0);
+
         }
 
-    public void climber() {
+    public void climber() throws InterruptedException {
         SmartDashboard.putNumber("Light Saber climber", 0);
         if(m_driverController1.getTriggerAxis(Hand.kRight)>0.5 & m_encoder.getPosition() < 31)
-        {   m_latch.set(Relay.Value.kForward);
-            m_motor.set(-0.33);        }
+        {   m_latch.set(Relay.Value.kOn);
+            Thread.sleep(400);
+           // m_motor.set(0.6);
+           // Thread.sleep(100);
+           // m_motor.set(0);  
+           // Thread.sleep(200);  
+            m_motor.set(-0.33);     }
 
         if(m_driverController1.getTriggerAxis(Hand.kRight)>0.5 & m_encoder.getPosition() > 30 & m_encoder.getPosition() < 171)
-        {   m_latch.set(Relay.Value.kForward);
-            m_motor.set(-0.8);        }
+        {   m_latch.set(Relay.Value.kOn);
+            Thread.sleep(400);
+          //  m_motor.set(0.6);
+          //  Thread.sleep(100);
+          //  m_motor.set(0);  
+          //  Thread.sleep(100);  
+            m_motor.set(-0.8);      }
 
         if(m_driverController1.getTriggerAxis(Hand.kRight)>0.5 & m_encoder.getPosition() > 170)
-        {   m_latch.set(Relay.Value.kForward);
-            m_motor.set(-0.33);        }
+        {   m_latch.set(Relay.Value.kOn);
+          //  Thread.sleep(400);
+          //  m_motor.set(0.6);
+          //  Thread.sleep(100);
+          //  m_motor.set(0);  
+          //  Thread.sleep(100);  
+            m_motor.set(-0.33);     }
 
         if(m_driverController1.getTriggerAxis(Hand.kLeft)>0.5 & m_encoder.getPosition() < 31)
-        {   m_latch.set(Relay.Value.kReverse);
-            m_motor.set(0.33);        }
+        {   m_latch.set(Relay.Value.kOn);
+            Thread.sleep(400);  
+            m_motor.set(0.33);      }
 
         if(m_driverController1.getTriggerAxis(Hand.kLeft)>0.5 & m_encoder.getPosition() > 30 & m_encoder.getPosition() < 171)
-        {   m_latch.set(Relay.Value.kReverse);
-            m_motor.set(0.8);        }
+        {   m_latch.set(Relay.Value.kOn);
+            Thread.sleep(400);
+            m_motor.set(0.8);       }
 
-        if(m_driverController1.getTriggerAxis(Hand.kLeft)>0.5 & m_encoder.getPosition() > 170 & m_encoder.getPosition() < 201)
-        {   m_latch.set(Relay.Value.kReverse);
-            m_motor.set(0.33);        }
+        if(m_driverController1.getTriggerAxis(Hand.kLeft)>0.5 & m_encoder.getPosition() > 170 & m_encoder.getPosition() < 191)
+        {   m_latch.set(Relay.Value.kOn);
+            Thread.sleep(400);
+            m_motor.set(0.33);      }
 
-        if(m_driverController1.getTriggerAxis(Hand.kLeft)>0.5 & m_encoder.getPosition() > 200)
-        {   m_latch.set(Relay.Value.kReverse);
-            m_motor.set(0.0);        }
+        if(m_driverController1.getTriggerAxis(Hand.kLeft)>0.5 & m_encoder.getPosition() > 190)
+        {   m_latch.set(Relay.Value.kOff);
+            m_motor.set(0.0);       }
 
         if(m_driverController1.getTriggerAxis(Hand.kRight)>0.5 & m_driverController1.getTriggerAxis(Hand.kLeft)>0.5)
-        {   m_latch.set(Relay.Value.kForward);
-            m_motor.set(-0.33);        }
+        {   m_latch.set(Relay.Value.kOn);
+            Thread.sleep(400);
+           // m_motor.set(0.6);
+           // Thread.sleep(100);
+           // m_motor.set(0);  
+          //  Thread.sleep(100);  
+            m_motor.set(-0.33);      }
 
         if(m_driverController1.getTriggerAxis(Hand.kRight)<0.5 & m_driverController1.getTriggerAxis(Hand.kLeft)<0.5)
-        {   m_latch.set(Relay.Value.kOff);
-            m_motor.set(0.0);        }
+        {   m_motor.set(0.0);
+            Thread.sleep(100);
+            m_latch.set(Relay.Value.kOff);        }
         
         SmartDashboard.putNumber("Light Saber Current", m_motor.getOutputCurrent());
         SmartDashboard.putNumber("Light Saber Position", m_encoder.getPosition());
