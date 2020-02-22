@@ -77,11 +77,11 @@ public class Robot extends TimedRobot {
     //m_autoSelected = m_chooser.getSelected();
     //m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     //System.out.println("Auto selected: " + m_autoSelected);
-    driveTrain.driveAuton(.5, 10000);
+    driveTrain.driveAuton(.5, 20000);
     ingester.ingestorAuton(1, 10000);
-    driveTrain.driveAuton(-0.5, 2500);
-    driveTrain.turnAuton(.5, 10000);
-    driveTrain.driveAuton(.5, 10000);
+    driveTrain.driveAuton(-0.5, 5000);
+    driveTrain.turnAuton(.5, 7500);
+    driveTrain.driveAuton(.5, 3000);
     //can add driveTrain.StopAuton(int i); if needed
   }
 
