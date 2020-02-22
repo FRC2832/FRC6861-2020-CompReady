@@ -38,8 +38,8 @@ public class DriveTrain {
       Math.pow(m_driverController1.getY(Hand.kRight),3)*mtrSpeed);
   }
 
-  public void driveAuton(final double speed, int i) {
-    for(i = 0; i <= 10000; i++)
+  public void driveAuton(double speed, double distance){
+    for(int i = 0; i <= distance; i++)
     {
         m_robotDrive.tankDrive(speed, speed);
         System.out.println(i);
@@ -51,9 +51,8 @@ public class DriveTrain {
   //  m_robotDrive.tankDrive(speed, speed);
     //setTimeout(timeout);
   }
-  public void turnAuton(final double speed, int i){
-    //setTimeout(timeout);
-    for(i = 0; i <= 10000; i++)
+  public void turnAuton(double speed, double distance){
+    for(int i = 0; i <= distance; i++)
     {
         m_robotDrive.tankDrive(-speed, speed);
         System.out.println(i);
