@@ -47,7 +47,6 @@ public class Robot extends TimedRobot {
     pid = new PID();
     skywalker = new SkyWalker();
 
-    //ingester.ingesterInit();
   }
 
   /**
@@ -75,9 +74,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    System.out.println("Auto selected: " + m_autoSelected);
+    //m_autoSelected = m_chooser.getSelected();
+    //m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    //System.out.println("Auto selected: " + m_autoSelected);
+    driveTrain.driveAuton(.5, 10000);
+    ingester.ingestorAuton(1, 10000);
+    driveTrain.driveAuton(-0.5, 2500);
+    driveTrain.turnAuton(.5, 10000);
+    driveTrain.driveAuton(.5, 10000);
+    //can add driveTrain.StopAuton(int i); if needed
   }
 
   /**
@@ -94,12 +99,15 @@ public class Robot extends TimedRobot {
         // Put default auto code here
         break;
     }
+    
   }
 
   @Override
   public void teleopInit() {
-    climber.climberInit();
-    pid.pidControl();
+    
+      climber.climberInit();
+      pid.pidControl();
+      colorWheel.colorInit();
   }
 
   /**
@@ -107,6 +115,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
+
       driveTrain.driveTank();
       colorWheel.colorWheelSpin();
 
@@ -115,7 +124,7 @@ public class Robot extends TimedRobot {
       } catch (Exception e) {
         System.out.println("Climber Exception. More info: " + e.getMessage());
       }
-      
+
       ingester.ingesterSweep();
       pid.commonLoop();
       skywalker.SkyWalk();

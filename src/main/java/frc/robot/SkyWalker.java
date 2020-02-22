@@ -12,6 +12,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.XboxController;
 
+
 public class SkyWalker {
     
     private SpeedController m_walk = new WPI_VictorSPX(4);

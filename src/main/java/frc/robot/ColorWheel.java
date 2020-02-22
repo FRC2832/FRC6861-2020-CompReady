@@ -9,32 +9,38 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class ColorWheel {
     private WPI_TalonSRX m_colorWheel = new WPI_TalonSRX(5);
     public XboxController m_driverController2 = new XboxController(1);
     
-    
-public void colorWheelSpin() {
-      if(m_driverController2.getXButtonPressed() & m_colorWheel.getSelectedSensorPosition()<10) //Auto mode
-      {
-        m_colorWheel.set(.8);
+public void colorInit() {
+      m_colorWheel.setSelectedSensorPosition(9);
       }
-      if(m_colorWheel.getSelectedSensorPosition()>=3400) //3400 is an approximation for number of counts for 3.5 turns 
+
+public void colorWheelSpin() {
+  SmartDashboard.putNumber("Color Wheel Position", m_colorWheel.getSelectedSensorPosition());
+  //Auto mode
+      if(m_driverController2.getXButtonPressed() & m_colorWheel.getSelectedSensorPosition()<10)
+      {
+        m_colorWheel.set(.6);
+      }
+  //3400 is an approximation for number of counts for 3.5 turns
+      if(m_colorWheel.getSelectedSensorPosition()>=50) 
       {
         m_colorWheel.set(0);
         m_colorWheel.setSelectedSensorPosition(0);
       }
-      if(m_driverController2.getYButtonPressed()) //Manual mode
+  //Manual mode
+      if(m_driverController2.getYButtonPressed())
       {
-        m_colorWheel.set(0.3);
+        m_colorWheel.set(0.5);
       }
       if(m_driverController2.getYButtonReleased())
       {
         m_colorWheel.set(0.0);
-      }
-            
+      }    
     }
-
 }

@@ -9,7 +9,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
 import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.XboxController;
@@ -35,4 +34,11 @@ public class Ingester {
         SmartDashboard.putNumber("Right Trigger Value: ", m_driverController1.getTriggerAxis(Hand.kRight));
     }
 
+    public void ingestorAuton(double speed, int i){
+        for(i = 0; i <= 10000; i++)
+        {
+            m_sweep.set(speed);
+            System.out.println(i);
+        }
+    }
 }

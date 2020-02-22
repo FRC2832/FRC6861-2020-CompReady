@@ -8,13 +8,13 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.Hand;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.*;
+
 
 public class PID {
     /** Hardware */
@@ -31,20 +31,11 @@ public class PID {
 	/** Save the target position to servo to */
 	double targetPositionRotations;
 
-//	private final WPI_TalonSRX talonInit = new WPI_TalonSRX(13);
- /*   public void pidInit() {
-		SmartDashboard.putNumber("Pid Init 1", 0);
-		talonInit.set(.8);
-		Timer.delay(5);
-		talonInit.set(0.0);
-		SmartDashboard.putNumber("Pid Init 2", 0);
-	}
-*/
 
 	public void pidControl() {
 		SmartDashboard.putNumber("Ingester Lift Position", _talon.getSelectedSensorPosition());
 		
-		targetPositionRotations = 500;
+		targetPositionRotations = 0;
 		_talon.set(ControlMode.Position, targetPositionRotations);
 
         _talon.setNeutralMode(NeutralMode.Brake);
