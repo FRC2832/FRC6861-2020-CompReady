@@ -20,6 +20,9 @@ public class Ingester {
     public XboxController m_driverController1 = new XboxController(1);
 
     public void ingesterSweep() {
+        SmartDashboard.putNumber("Left Trigger Value: ", m_driverController1.getTriggerAxis(Hand.kLeft));
+        SmartDashboard.putNumber("Right Trigger Value: ", m_driverController1.getTriggerAxis(Hand.kRight));
+
         if (m_driverController1.getTriggerAxis(Hand.kLeft) > 0.1) {
             m_sweep.set(m_driverController1.getTriggerAxis(Hand.kLeft) * -1);
         }
@@ -28,17 +31,6 @@ public class Ingester {
         }
         if (m_driverController1.getTriggerAxis(Hand.kRight) < 0.1 & m_driverController1.getTriggerAxis(Hand.kLeft) < 0.1) {
             m_sweep.set(0.0);
-        }
-        
-        SmartDashboard.putNumber("Left Trigger Value: ", m_driverController1.getTriggerAxis(Hand.kLeft));
-        SmartDashboard.putNumber("Right Trigger Value: ", m_driverController1.getTriggerAxis(Hand.kRight));
-    }
-
-    public void ingestorAuton(double speed, double distance){
-        for(int i = 0; i <= distance; i++)
-        {
-            m_sweep.set(speed);
-            System.out.println(i);
         }
     }
 }
