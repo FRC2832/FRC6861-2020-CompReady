@@ -74,15 +74,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    //m_autoSelected = m_chooser.getSelected();
-    //m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    //System.out.println("Auto selected: " + m_autoSelected);
-    driveTrain.driveAuton(.5, 20000);
-    ingester.ingestorAuton(1, 10000);
-    driveTrain.driveAuton(-0.5, 5000);
-    driveTrain.turnAuton(.5, 7500);
-    driveTrain.driveAuton(.5, 3000);
-    //can add driveTrain.StopAuton(int i); if needed
   }
 
   /**
@@ -90,6 +81,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    
     switch (m_autoSelected) {
       case kCustomAuto:
         // Put custom auto code here
@@ -102,9 +94,12 @@ public class Robot extends TimedRobot {
     
   }
 
+  /**
+   * This function is called once each time the robot enters teleoperated mode.
+   */
   @Override
   public void teleopInit() {
-    
+      
       climber.climberInit();
       pid.pidControl();
       colorWheel.colorInit();
@@ -118,17 +113,16 @@ public class Robot extends TimedRobot {
 
       driveTrain.driveTank();
       colorWheel.colorWheelSpin();
-
-      try {
-        climber.climber();
-      } catch (Exception e) {
-        System.out.println("Climber Exception. More info: " + e.getMessage());
-      }
-
+      climber.climber();
       ingester.ingesterSweep();
       pid.commonLoop();
       skywalker.SkyWalk();
-
   }
 
+    /**
+   * This function is called periodically during test mode.
+   */
+  @Override
+  public void testPeriodic() {
+  }
 }

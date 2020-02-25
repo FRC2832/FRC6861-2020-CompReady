@@ -17,7 +17,7 @@ public class ColorWheel {
     public XboxController m_driverController2 = new XboxController(1);
     
 public void colorInit() {
-      m_colorWheel.setSelectedSensorPosition(9);
+      m_colorWheel.setSelectedSensorPosition(0);
       }
 
 public void colorWheelSpin() {
