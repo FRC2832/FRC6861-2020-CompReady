@@ -1,23 +1,12 @@
-/*----------------------------------------------------------------------------*/
-/* Copyright (c) 2017-2018 FIRST. All Rights Reserved.                        */
-/* Open Source Software - may be modified and shared by FRC teams. The code   */
-/* must be accompanied by the FIRST BSD license file in the root directory of */
-/* the project.                                                               */
-/*----------------------------------------------------------------------------*/
 
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Timer;
 
-/**
- * The VM is configured to automatically run this class, and to call the
- * functions corresponding to each mode, as described in the TimedRobot
- * documentation. If you change the name of this class or the package after
- * creating this project, you must also update the build.gradle file in the
- * project.
- */
+
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
   private static final String kCustomAuto = "My Auto";
@@ -30,67 +19,76 @@ public class Robot extends TimedRobot {
   private static PID pid;
   private static SkyWalker skywalker;
 
-  /**
-   * This function is run when the robot is first started up and should be
-   * used for any initialization code.
-   */
+  private final Timer m_timer = new Timer();
+
+  private int count = 1;
+
+  private double stepTime1 = 4.0;
+  private double stepTime2 = 1.0;
+  private double stepTime3 = 4.0;
+
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-
     driveTrain = new DriveTrain();
     ingester = new Ingester();
     colorWheel = new ColorWheel();
     climber = new Climber();
     pid = new PID();
     skywalker = new SkyWalker();
-
   }
-
-  /**
-   * This function is called every robot packet, no matter the mode. Use
-   * this for items like diagnostics that you want ran during disabled,
-   * autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
-   */
+  
   @Override
   public void robotPeriodic() {
   }
 
-  /**
-   * This autonomous (along with the chooser code above) shows how to select
-   * between different autonomous modes using the dashboard. The sendable
-   * chooser code works with the Java SmartDashboard. If you prefer the
-   * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-   * getString line to get the auto name from the text box below the Gyro
-   *
-   * <p>You can add additional auto modes by adding additional comparisons to
-   * the switch structure below with additional strings. If using the
-   * SendableChooser make sure to add them to the chooser code above as well.
-   */
   @Override
   public void autonomousInit() {
+    m_timer.reset();
+    m_timer.start();
   }
 
-  /**
-   * This function is called periodically during autonomous.
-   */
   @Override
   public void autonomousPeriodic() {
     
-    switch (m_autoSelected) {
+    if ((m_timer.get() < stepTime1) && (count==1)) {
+      driveTrain.driveArcade(0.5, 0.0);
+    } else if ((m_timer.get() > stepTime1) && (count==1)) {
+      driveTrain.driveArcade(0, 0);
+      count = 2;
+      m_timer.reset();
+      m_timer.start(); 
+    }
+
+    if ((m_timer.get() < stepTime2) && (count==2)) {
+      ingester.ingesterAuton(-1.0);
+    } else if ((m_timer.get() > stepTime2) && (count==2)) {
+      ingester.ingesterAuton(0.0);
+      count = 3;
+      m_timer.reset();
+      m_timer.start();
+    }
+
+    if ((m_timer.get() < stepTime3) && (count==3)) {
+      driveTrain.driveArcade(-0.5, 0.3);
+    } else if ((m_timer.get() > stepTime3) && (count==3)) {
+      driveTrain.driveArcade(0, 0);
+      count = 4;
+      m_timer.reset();
+      m_timer.start();
+    }
+
+    /*switch (m_autoSelected) {
       case kCustomAuto:
-        // Put custom auto code here
+
         break;
       case kDefaultAuto:
       default:
-        // Put default auto code here
+
         break;
-    }
+    }*/
     
   }
 
@@ -102,9 +100,7 @@ public class Robot extends TimedRobot {
       colorWheel.colorInit();
   }
 
-  /**
-   * This function is called periodically during operator control.
-   */
+
   @Override
   public void teleopPeriodic() {
 
