@@ -93,6 +93,9 @@ public class Robot extends TimedRobot {
     
   }
 
+  /**
+   * This function is called once each time the robot enters teleoperated mode.
+   */
   @Override
   public void teleopInit() {
       
@@ -111,7 +114,12 @@ public class Robot extends TimedRobot {
       ingester.ingesterSweep();
       pid.commonLoop();
       skywalker.SkyWalk();
-
   }
 
+    /**
+   * This function is called periodically during test mode.
+   */
+  @Override
+  public void testPeriodic() {
+  }
 }
