@@ -46,6 +46,9 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    m_autoSelected = m_chooser.getSelected();
+    m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
+    System.out.println("Auto selected: " + m_autoSelected);
     m_timer.reset();
     m_timer.start();
   }
@@ -53,37 +56,35 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     
-    if ((m_timer.get() < stepTime1) && (count==1)) {
-      driveTrain.driveArcade(0.5, 0.0);
-    } else if ((m_timer.get() > stepTime1) && (count==1)) {
-      driveTrain.driveArcade(0, 0);
-      count = 2;
-      m_timer.reset();
-      m_timer.start(); 
-    }
-
-    if ((m_timer.get() < stepTime2) && (count==2)) {
-      ingester.ingesterAuton(-1.0);
-    } else if ((m_timer.get() > stepTime2) && (count==2)) {
-      ingester.ingesterAuton(0.0);
-      count = 3;
-      m_timer.reset();
-      m_timer.start();
-    }
-
-    if ((m_timer.get() < stepTime3) && (count==3)) {
-      driveTrain.driveArcade(-0.5, 0.3);
-    } else if ((m_timer.get() > stepTime3) && (count==3)) {
-      driveTrain.driveArcade(0, 0);
-      count = 4;
-      m_timer.reset();
-      m_timer.start();
-    }
-
-    /*switch (m_autoSelected) {
-      case kCustomAuto:
-
-        break;
+   /* switch (m_autoSelected) {
+      case kCustomAuto:*/
+      if ((m_timer.get() < stepTime1) && (count==1)) {
+        driveTrain.driveArcade(0.7, 0.0);
+      } else if ((m_timer.get() > stepTime1) && (count==1)) {
+        driveTrain.driveArcade(0, 0);
+        count = 2;
+        m_timer.reset();
+        m_timer.start(); 
+      }
+  
+      if ((m_timer.get() < stepTime2) && (count==2)) {
+        ingester.ingesterAuton(-1.0);
+      } else if ((m_timer.get() > stepTime2) && (count==2)) {
+        ingester.ingesterAuton(0.0);
+        count = 3;
+        m_timer.reset();
+        m_timer.start();
+      }
+  
+      if ((m_timer.get() < stepTime3) && (count==3)) {
+        driveTrain.driveArcade(-0.6, 0.3);
+      } else if ((m_timer.get() > stepTime3) && (count==3)) {
+        driveTrain.driveArcade(0, 0);
+        count = 4;
+        m_timer.reset();
+        m_timer.start();
+      }
+        /*break;
       case kDefaultAuto:
       default:
 

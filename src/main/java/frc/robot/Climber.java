@@ -36,44 +36,38 @@ public class Climber {
         SmartDashboard.putNumber("Light Saber Current", m_motor.getOutputCurrent());
         SmartDashboard.putNumber("Light Saber Position", m_encoder.getPosition());
 
-        if (m_driverController1.getTriggerAxis(Hand.kRight) > 0.5 & m_encoder.getPosition() < 31) {
-            m_motor.set(-0.33);
-        }
-
-        if (m_driverController1.getTriggerAxis(Hand.kRight) > 0.5 && m_encoder.getPosition() > 30
-                && m_encoder.getPosition() < 171) {
-            m_motor.set(-0.8);
-        }
-
-        if (m_driverController1.getTriggerAxis(Hand.kRight) > 0.5 && m_encoder.getPosition() > 170) {
-            m_motor.set(-0.33);
-        }
-
-        if (m_driverController1.getTriggerAxis(Hand.kLeft) > 0.5 && m_encoder.getPosition() < 31) {
+        if ((m_driverController1.getTriggerAxis(Hand.kRight) > 0.5) && (m_encoder.getPosition() < 31)) {
             m_motor.set(0.33);
         }
 
-        if (m_driverController1.getTriggerAxis(Hand.kLeft) > 0.5 && m_encoder.getPosition() > 30
-                && m_encoder.getPosition() < 171) {
+        if ((m_driverController1.getTriggerAxis(Hand.kRight) > 0.5) && (m_encoder.getPosition() > 30)
+                && (m_encoder.getPosition() < 171)) {
             m_motor.set(0.8);
         }
 
-        if (m_driverController1.getTriggerAxis(Hand.kLeft) > 0.5 && m_encoder.getPosition() > 170
-                && m_encoder.getPosition() < 191) {
+        if ((m_driverController1.getTriggerAxis(Hand.kRight) > 0.5) && (m_encoder.getPosition() > 170)) {
             m_motor.set(0.33);
         }
 
-        if (m_driverController1.getTriggerAxis(Hand.kLeft) > 0.5 && m_encoder.getPosition() > 190) {
-            m_motor.set(0.0);
-        }
-
-        if (m_driverController1.getTriggerAxis(Hand.kRight) > 0.5
-                && m_driverController1.getTriggerAxis(Hand.kLeft) > 0.5) {
+        if ((m_driverController1.getTriggerAxis(Hand.kLeft) > 0.5) && (m_encoder.getPosition() < 31)) {
             m_motor.set(-0.33);
         }
 
-        if (m_driverController1.getTriggerAxis(Hand.kRight) < 0.5
-                && m_driverController1.getTriggerAxis(Hand.kLeft) < 0.5) {
+        if ((m_driverController1.getTriggerAxis(Hand.kLeft) > 0.5) && (m_encoder.getPosition() > 30)
+                && (m_encoder.getPosition() < 171)) {
+            m_motor.set(-0.8);
+        }
+
+        if ((m_driverController1.getTriggerAxis(Hand.kLeft) > 0.5) && (m_encoder.getPosition() > 170)
+                && (m_encoder.getPosition() < 300)) {
+            m_motor.set(-0.33);
+        }
+
+        if ((m_driverController1.getTriggerAxis(Hand.kRight) > 0.5) && (m_driverController1.getTriggerAxis(Hand.kLeft) > 0.5)) {
+            m_motor.set(0.4);
+        }
+
+        if ((m_driverController1.getTriggerAxis(Hand.kRight) < 0.5) && (m_driverController1.getTriggerAxis(Hand.kLeft) < 0.5)) {
             m_motor.set(0.0);
         }
     }
