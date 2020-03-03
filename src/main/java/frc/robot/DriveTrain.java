@@ -38,12 +38,56 @@ public class DriveTrain {
       Math.pow(m_driverController1.getY(Hand.kRight),3) * mtrSpeed);
   }
 
+<<<<<<< Updated upstream
   public void driveArcade() {
+=======
+  public void driveArcade(double speed, double rotations) {
+>>>>>>> Stashed changes
     m_leftFtrMotor.setNeutralMode(NeutralMode.Brake);
     m_rightFrtMotor.setNeutralMode(NeutralMode.Brake);
     m_leftRrMotor.setNeutralMode(NeutralMode.Brake);
     m_rightRrMotor.setNeutralMode(NeutralMode.Brake);
 
+<<<<<<< Updated upstream
     m_robotDrive.arcadeDrive(m_driverController1.getY(Hand.kLeft) * mtrSpeed, m_driverController1.getX(Hand.kRight) * mtrSpeed);
 }
+=======
+    m_robotDrive.arcadeDrive(speed, rotations);
+  }
+  
+  public void driveAuton(double speed, double distance){
+    for(int i = 0; i <= distance; i++)
+    {
+        m_robotDrive.tankDrive(speed, speed);
+        System.out.println(i);
+    }
+    //m_leftFtrMotor.setNeutralMode(NeutralMode.Brake);
+    //m_rightFrtMotor.setNeutralMode(NeutralMode.Brake);
+    //m_leftRrMotor.setNeutralMode(NeutralMode.Brake);
+    //m_rightRrMotor.setNeutralMode(NeutralMode.Brake);
+  //  m_robotDrive.tankDrive(speed, speed);
+    //setTimeout(timeout);
+  }
+  public void turnAuton(double speed, double distance){
+    for(int i = 0; i <= distance; i++)
+    {
+        m_robotDrive.tankDrive(-speed, speed);
+        System.out.println(i);
+    }
+    //m_leftFtrMotor.setNeutralMode(NeutralMode.Brake);
+    //m_rightFrtMotor.setNeutralMode(NeutralMode.Brake);
+    //m_leftRrMotor.setNeutralMode(NeutralMode.Brake);
+    //m_rightRrMotor.setNeutralMode(NeutralMode.Brake);
+   
+    //m_robotDrive.tankDrive(-speed, speed);//set negitive to turn left
+  }
+  public void StopAuton(int i){
+    //setTimeout(timeout);
+    for(i = 0; i <= 10000; i++)
+    {
+        m_robotDrive.tankDrive(0, 0);
+        System.out.println(i);
+    }
+  }
+>>>>>>> Stashed changes
 }
