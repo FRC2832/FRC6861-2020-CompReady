@@ -20,6 +20,9 @@ public class Ingester {
     public XboxController m_driverController1 = new XboxController(1);
 
     public void ingesterSweep() {
+        SmartDashboard.putNumber("Left Trigger Value: ", m_driverController1.getTriggerAxis(Hand.kLeft));
+        SmartDashboard.putNumber("Right Trigger Value: ", m_driverController1.getTriggerAxis(Hand.kRight));
+
         if (m_driverController1.getTriggerAxis(Hand.kLeft) > 0.1) {
             m_sweep.set(m_driverController1.getTriggerAxis(Hand.kLeft) * -1);
         }
@@ -36,6 +39,5 @@ public class Ingester {
 
     public void ingesterAuton(double speed){
         m_sweep.set(speed);
-        }
-
+    }
 }

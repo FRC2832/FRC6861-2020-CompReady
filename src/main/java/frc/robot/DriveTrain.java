@@ -36,9 +36,7 @@ public class DriveTrain {
       m_robotDrive.tankDrive(Math.pow(m_driverController1.getY(Hand.kLeft), 3) * mtrSpeed, 
                              Math.pow(m_driverController1.getY(Hand.kRight), 3) * mtrSpeed,
                              false); // do not squre since we already cubed it
-      m_robotDrive.tankDrive(m_driverController1.getY(Hand.kLeft) * mtrSpeed, 
-                             m_driverController1.getY(Hand.kRight) * mtrSpeed,
-                             true); // square inputs
+      //m_robotDrive.tankDrive(m_driverController1.getY(Hand.kLeft) * mtrSpeed, m_driverController1.getY(Hand.kRight) * mtrSpeed, true); // square inputs
   }
 
   public void driveArcade(double speed, double rotations) {

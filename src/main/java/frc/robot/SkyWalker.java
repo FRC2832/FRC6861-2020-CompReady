@@ -29,7 +29,5 @@ public class SkyWalker {
         if ((m_driverController2.getX(Hand.kLeft) < 0.1) && (m_driverController2.getX(Hand.kLeft) > -0.1))  {
             m_walk.set(0.0);
         }
-
     }
-
 }

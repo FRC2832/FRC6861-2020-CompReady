@@ -28,7 +28,6 @@ public class Climber {
         m_motor.setIdleMode(IdleMode.kBrake);
         m_encoder = m_motor.getEncoder();
         m_encoder.setPosition(0.0);
-
     }
 
     public void climber() {

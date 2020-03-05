@@ -13,7 +13,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Timer;
-import frc.robot.Auton;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -120,9 +119,12 @@ public class Robot extends TimedRobot {
     
   }
 
+  /**
+   * This function is called once each time the robot enters teleoperated mode.
+   */
   @Override
   public void teleopInit() {
-    
+      
       climber.climberInit();
       pid.pidControl();
       colorWheel.colorInit();
@@ -140,7 +142,6 @@ public class Robot extends TimedRobot {
       ingester.ingesterSweep();
       pid.commonLoop();
       skywalker.SkyWalk();
-
   }
 
   @Override

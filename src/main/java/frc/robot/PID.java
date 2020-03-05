@@ -107,7 +107,7 @@ public class PID {
 		_sb.append("u"); 	// Native units
         
         if (_xBox.getBumperPressed(Hand.kRight)) {
-			targetPositionRotations = 1000;
+			targetPositionRotations = 200;
 			_talon.set(ControlMode.Position, targetPositionRotations);
         }
         
@@ -117,7 +117,7 @@ public class PID {
         }
 
 		if (_xBox.getAButtonPressed()) {
-			targetPositionRotations = -4000;
+			targetPositionRotations = -4500;
 			_talon.set(ControlMode.Position, targetPositionRotations);
 		}
 

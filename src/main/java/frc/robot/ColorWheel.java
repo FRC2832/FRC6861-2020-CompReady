@@ -9,8 +9,6 @@ package frc.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
 
 public class ColorWheel {
     private WPI_TalonSRX m_colorWheel = new WPI_TalonSRX(5);
