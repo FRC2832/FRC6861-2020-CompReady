@@ -17,18 +17,19 @@ public class ColorWheel {
     public XboxController m_driverController2 = new XboxController(1);
     
 public void colorInit() {
-      m_colorWheel.setSelectedSensorPosition(9);
-      }
+    //TODO: Fix this encoder---9 doesn't work curently
+    m_colorWheel.setSelectedSensorPosition(9);
+}
 
 public void colorWheelSpin() {
-  SmartDashboard.putNumber("Color Wheel Position", m_colorWheel.getSelectedSensorPosition());
+  //SmartDashboard.putNumber("Color Wheel Position", m_colorWheel.getSelectedSensorPosition());
   //Auto mode
-      if(m_driverController2.getXButtonPressed() & m_colorWheel.getSelectedSensorPosition()<10)
+      if(m_driverController2.getXButtonPressed() && (m_colorWheel.getSelectedSensorPosition() < 10))
       {
         m_colorWheel.set(.6);
       }
   //3400 is an approximation for number of counts for 3.5 turns
-      if(m_colorWheel.getSelectedSensorPosition()>=50) 
+      if(m_colorWheel.getSelectedSensorPosition() >= 50) 
       {
         m_colorWheel.set(0);
         m_colorWheel.setSelectedSensorPosition(0);

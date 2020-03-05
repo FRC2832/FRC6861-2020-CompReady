@@ -7,9 +7,13 @@
 
 package frc.robot;
 
+import com.ctre.phoenix.sensors.PigeonIMU;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.Timer;
+import frc.robot.Auton;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -20,7 +24,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
+  private static final String kCustomAuto1 = "AutoPos1";
+  private static final String kCustomAuto2 = "AutoPos2";
+  private static final String kCustomAuto3 = "AutoPos3";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private static DriveTrain driveTrain;
@@ -29,6 +35,9 @@ public class Robot extends TimedRobot {
   private static Climber climber;
   private static PID pid;
   private static SkyWalker skywalker;
+  private static Auton auton;
+  private PigeonIMU m_gyro;
+  public static final Timer m_timer = new Timer();
 
   /**
    * This function is run when the robot is first started up and should be
@@ -37,16 +46,19 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
+    m_chooser.addOption("AutoPos1", kCustomAuto1);
+    m_chooser.addOption("AutoPos2", kCustomAuto2);
+    m_chooser.addOption("AutoPos3", kCustomAuto3);
     SmartDashboard.putData("Auto choices", m_chooser);
 
     driveTrain = new DriveTrain();
+    this.m_gyro = new PigeonIMU(driveTrain.m_leftRrMotor);
     ingester = new Ingester();
     colorWheel = new ColorWheel();
     climber = new Climber();
     pid = new PID();
     skywalker = new SkyWalker();
-
+    auton = new Auton();
   }
 
   /**
@@ -74,15 +86,12 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    //m_autoSelected = m_chooser.getSelected();
-    //m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    //System.out.println("Auto selected: " + m_autoSelected);
-    driveTrain.driveAuton(.5, 20000);
-    ingester.ingestorAuton(1, 10000);
-    driveTrain.driveAuton(-0.5, 5000);
-    driveTrain.turnAuton(.5, 7500);
-    driveTrain.driveAuton(.5, 3000);
-    //can add driveTrain.StopAuton(int i); if needed
+    m_autoSelected = m_chooser.getSelected();
+    System.out.println("Auto selected: " + m_autoSelected);
+
+    m_timer.reset();
+    m_timer.start();
+    m_gyro.setFusedHeading(0);
   }
 
   /**
@@ -90,9 +99,18 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
+    System.out.println("In autonomousPeriodic: " + m_autoSelected);
     switch (m_autoSelected) {
-      case kCustomAuto:
+      case kCustomAuto1:
         // Put custom auto code here
+        System.out.println("In autonomousPeriodic-1: " + m_autoSelected);
+        auton.AutonPos1Run();
+        break;
+      case kCustomAuto2:
+        // Put custom auto code here
+        System.out.println("In autonomousPeriodic-2: " + m_autoSelected);
+        auton.AutonPos2Run();
+        
         break;
       case kDefaultAuto:
       default:
@@ -118,17 +136,16 @@ public class Robot extends TimedRobot {
 
       driveTrain.driveTank();
       colorWheel.colorWheelSpin();
-
-      try {
-        climber.climber();
-      } catch (Exception e) {
-        System.out.println("Climber Exception. More info: " + e.getMessage());
-      }
-
+      climber.climber();
       ingester.ingesterSweep();
       pid.commonLoop();
       skywalker.SkyWalk();
 
+  }
+
+  @Override
+  public void testPeriodic() {
+    
   }
 
 }
