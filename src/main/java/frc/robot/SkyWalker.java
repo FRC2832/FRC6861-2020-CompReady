@@ -21,12 +21,12 @@ public class SkyWalker {
     public void SkyWalk(){
     
         if (m_driverController2.getX(Hand.kLeft) > 0.1) {
-        m_walk.set(m_driverController2.getX(Hand.kLeft) * 1);
+            m_walk.set(m_driverController2.getX(Hand.kLeft) * 1);
         }
         if (m_driverController2.getX(Hand.kLeft) < -0.1) {
             m_walk.set(m_driverController2.getX(Hand.kLeft) * 1);
         }
-        if (m_driverController2.getX(Hand.kLeft) < 0.1 & m_driverController2.getX(Hand.kLeft) > -0.1)  {
+        if ((m_driverController2.getX(Hand.kLeft) < 0.1) && (m_driverController2.getX(Hand.kLeft) > -0.1))  {
             m_walk.set(0.0);
         }
     }
