@@ -7,12 +7,11 @@
 
 package frc.robot;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
+//import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.Timer;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -22,10 +21,10 @@ import edu.wpi.first.wpilibj.Timer;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto1 = "AutoPos1";
-  private static final String kCustomAuto2 = "AutoPos2";
-  private static final String kCustomAuto3 = "AutoPos3";
+  private static final String kDefaultAuto = "Default - Move 2s";
+  private static final String kCustomAuto1 = "Front of Goal";
+  private static final String kCustomAuto2 = "Left of Goal";
+  private static final String kCustomAuto3 = "Right of Goal";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
   private static DriveTrain driveTrain;
@@ -35,8 +34,7 @@ public class Robot extends TimedRobot {
   private static PID pid;
   private static SkyWalker skywalker;
   private static Auton auton;
-  private PigeonIMU m_gyro;
-  public static final Timer m_timer = new Timer();
+  //private PigeonIMU m_gyro;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -44,20 +42,20 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("AutoPos1", kCustomAuto1);
-    m_chooser.addOption("AutoPos2", kCustomAuto2);
-    m_chooser.addOption("AutoPos3", kCustomAuto3);
-    SmartDashboard.putData("Auto choices", m_chooser);
+    m_chooser.setDefaultOption("Default 2s Move", kDefaultAuto);
+    m_chooser.addOption("Front of Goal", kCustomAuto1);
+    m_chooser.addOption("Left of Goal", kCustomAuto2);
+    m_chooser.addOption("Right of Goal", kCustomAuto3);
+    SmartDashboard.putData("Auto Choices", m_chooser);
 
     driveTrain = new DriveTrain();
-    this.m_gyro = new PigeonIMU(driveTrain.m_leftRrMotor);
+    //this.m_gyro = new PigeonIMU(driveTrain.m_leftRrMotor);
     ingester = new Ingester();
     colorWheel = new ColorWheel();
     climber = new Climber();
     pid = new PID();
     skywalker = new SkyWalker();
-    auton = new Auton();
+    auton = new Auton(driveTrain);
   }
 
   /**
@@ -87,10 +85,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     m_autoSelected = m_chooser.getSelected();
     System.out.println("Auto selected: " + m_autoSelected);
-
-    m_timer.reset();
-    m_timer.start();
-    m_gyro.setFusedHeading(0);
+    auton.autonInit();
+    //m_gyro.setFusedHeading(0);
   }
 
   /**
@@ -98,22 +94,35 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousPeriodic() {
-    System.out.println("In autonomousPeriodic: " + m_autoSelected);
+    System.out.println("Autonomous Periodic: " + m_autoSelected);
     switch (m_autoSelected) {
       case kCustomAuto1:
         // Put custom auto code here
-        System.out.println("In autonomousPeriodic-1: " + m_autoSelected);
-        auton.AutonPos1Run();
+        System.out.println("Front of Goal: " + m_autoSelected);
+        auton.autonFrontGoal();
+
         break;
+
       case kCustomAuto2:
         // Put custom auto code here
-        System.out.println("In autonomousPeriodic-2: " + m_autoSelected);
-        auton.AutonPos2Run();
+        System.out.println("Left of Goal: " + m_autoSelected);
+        auton.autonLeftGoal();
         
         break;
+
+        case kCustomAuto3:
+        // Put custom auto code here
+        System.out.println("Right of Goal: " + m_autoSelected);
+        auton.autonRightGoal();
+        
+        break;
+
       case kDefaultAuto:
       default:
         // Put default auto code here
+        System.out.println("Move 2 Seconds: " + m_autoSelected);
+        auton.autonMove2Sec();
+        
         break;
     }
     
