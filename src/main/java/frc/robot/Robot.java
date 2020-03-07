@@ -7,6 +7,9 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
+
 //import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -34,6 +37,8 @@ public class Robot extends TimedRobot {
   private static PID pid;
   private static SkyWalker skywalker;
   private static Auton auton;
+  private static UsbCamera piCam1;
+  private static UsbCamera piCam2;
   //private PigeonIMU m_gyro;
 
   /**
@@ -48,6 +53,7 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Right of Goal", kCustomAuto3);
     SmartDashboard.putData("Auto Choices", m_chooser);
 
+
     driveTrain = new DriveTrain();
     //this.m_gyro = new PigeonIMU(driveTrain.m_leftRrMotor);
     ingester = new Ingester();
@@ -56,6 +62,8 @@ public class Robot extends TimedRobot {
     pid = new PID();
     skywalker = new SkyWalker();
     auton = new Auton(driveTrain);
+    piCam1 = CameraServer.getInstance().startAutomaticCapture(0);
+    piCam2 = CameraServer.getInstance().startAutomaticCapture(1);
   }
 
   /**
