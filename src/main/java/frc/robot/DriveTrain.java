@@ -36,7 +36,10 @@ public class DriveTrain {
       m_robotDrive.tankDrive(Math.pow(m_driverController1.getY(Hand.kLeft), 3) * mtrSpeed, 
                              Math.pow(m_driverController1.getY(Hand.kRight), 3) * mtrSpeed,
                              false); // do not squre since we already cubed it
-      //m_robotDrive.tankDrive(m_driverController1.getY(Hand.kLeft) * mtrSpeed, m_driverController1.getY(Hand.kRight) * mtrSpeed, true); // square inputs
+      
+      /*m_robotDrive.tankDrive(m_driverController1.getY(Hand.kLeft) * mtrSpeed,
+                               m_driverController1.getY(Hand.kRight) * mtrSpeed,
+                               true); // square inputs*/
   }
 
   public void driveArcade(double speed, double rotations) {
@@ -46,32 +49,5 @@ public class DriveTrain {
     m_rightRrMotor.setNeutralMode(NeutralMode.Brake);
 
     m_robotDrive.arcadeDrive(speed, rotations);
-  }
-  
-  public void driveAuton(double speed, double distance){
-    for(int i = 0; i <= distance; i++)
-    {
-        m_robotDrive.tankDrive(speed, distance);
-        System.out.println(i);
-    }
-    //m_leftFtrMotor.setNeutralMode(NeutralMode.Brake);
-    //m_rightFrtMotor.setNeutralMode(NeutralMode.Brake);
-    //m_leftRrMotor.setNeutralMode(NeutralMode.Brake);
-    //m_rightRrMotor.setNeutralMode(NeutralMode.Brake);
-  //  m_robotDrive.tankDrive(speed, speed);
-    //setTimeout(timeout);
-  }
-  public void turnAuton(double speed, double distance){
-    for(int i = 0; i <= distance; i++)
-    {
-        m_robotDrive.tankDrive(-speed, speed);
-        System.out.println(i);
-    }
-    //m_leftFtrMotor.setNeutralMode(NeutralMode.Brake);
-    //m_rightFrtMotor.setNeutralMode(NeutralMode.Brake);
-    //m_leftRrMotor.setNeutralMode(NeutralMode.Brake);
-    //m_rightRrMotor.setNeutralMode(NeutralMode.Brake);
-   
-    //m_robotDrive.tankDrive(-speed, speed);//set negitive to turn left
   }
 }
