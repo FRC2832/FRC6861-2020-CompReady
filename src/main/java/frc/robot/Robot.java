@@ -12,6 +12,12 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.cscore.CvSink;
+import edu.wpi.cscore.CvSource;
+import edu.wpi.cscore.MjpegServer;
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoSink;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -27,6 +33,10 @@ public class Robot extends TimedRobot {
   private static final String kCustomAuto3 = "Right of Goal";
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
+  private final SendableChooser<String> cam_chooser = new SendableChooser<>();
+  private static final String kCameraBack = "Camera Back";
+  private static final String kCameraFront = "Camera Front";
+  private String cam_autoSelected;
   private static DriveTrain driveTrain;
   private static Ingester ingester;
   private static ColorWheel colorWheel;
@@ -34,6 +44,10 @@ public class Robot extends TimedRobot {
   private static PID pid;
   private static SkyWalker skywalker;
   private static Auton auton;
+  private static UsbCamera usbCameraBack = new UsbCamera("USB Camera 0", 0);
+  private static MjpegServer mjpegServer1 = new MjpegServer("serve_USB Camera 0", 1181);
+  private static UsbCamera usbCameraFront = new UsbCamera("USB Camera 1", 1);
+  private static VideoSink server;
   //private PigeonIMU m_gyro;
 
   /**
@@ -42,10 +56,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    CameraServer.getInstance().startAutomaticCapture();
+    CameraServer.getInstance().addCamera(usbCameraBack);
+    CameraServer.getInstance().addCamera(usbCameraFront);
+    mjpegServer1.setSource(usbCameraBack);
+    mjpegServer1.setSource(usbCameraFront);
     m_chooser.setDefaultOption("Default 2s Move", kDefaultAuto);
     m_chooser.addOption("Front of Goal", kCustomAuto1);
     m_chooser.addOption("Left of Goal", kCustomAuto2);
     m_chooser.addOption("Right of Goal", kCustomAuto3);
+    cam_chooser.setDefaultOption("Front Camera", kCameraFront);
+    cam_chooser.addOption("Back Camera", kCameraBack);
     SmartDashboard.putData("Auto Choices", m_chooser);
 
     driveTrain = new DriveTrain();
@@ -96,6 +117,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     System.out.println("Autonomous Periodic: " + m_autoSelected);
+    setCamera();
+
     switch (m_autoSelected) {
       case kCustomAuto1:
         // Put custom auto code here
@@ -121,10 +144,11 @@ public class Robot extends TimedRobot {
       case kDefaultAuto:
       default:
         // Put default auto code here
-        System.out.println("Move 2 Seconds: " + m_autoSelected);
+        //System.out.println("Move 2 Seconds: " + m_autoSelected);
         auton.autonMove2Sec();
         
         break;
+
     }
     
   }
@@ -152,6 +176,20 @@ public class Robot extends TimedRobot {
       ingester.ingesterSweep();
       pid.commonLoop();
       skywalker.SkyWalk();
+
+      setCamera();
+  }
+
+  private void setCamera() {
+    switch (cam_autoSelected) {
+      case kCameraBack:
+        server.setSource(usbCameraBack);
+        break;
+      case kCameraFront:
+      default:
+        server.setSource(usbCameraFront);
+        break;
+    }
   }
 
   @Override

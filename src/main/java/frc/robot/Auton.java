@@ -44,17 +44,20 @@ public void autonInit() {
   // Autonomous mode: Robot positioned anywhere on the line
   // Move forward for a set amount of time
   public void autonMove2Sec(){
+    double timerValue = m_timer.get();
     SmartDashboard.putString("Auton Mode", "autonMove2Sec");
     SmartDashboard.putNumber("Auton Step", step);
     SmartDashboard.putNumber("Gyro Fused Heading", m_gyro.getFusedHeading());
-    SmartDashboard.putNumber("Timer", m_timer.get());
-    if ((m_timer.get() < stepTimeC1) && (step == 1)) {
+    SmartDashboard.putNumber("Timer", timerValue);
+    if ((timerValue < stepTimeC1) && (step == 1)) {
       driveTrain.driveArcade(0.6, 0.0);
-    } else if ((m_timer.get() > stepTimeC1) && (step == 1)) {
+    } else if ((timerValue > stepTimeC1) && (step == 1)) {
       driveTrain.driveArcade(0, 0);
       step = 2; // increment step counter, move to next step
       m_timer.reset();
       m_timer.start();
+    } else {
+      driveTrain.driveArcade(0, 0);
     }
   }
 
@@ -72,6 +75,8 @@ public void autonInit() {
       step = 2; // increment step counter, move to next step
       m_timer.reset();
       m_timer.start();
+    } else {
+      driveTrain.driveArcade(0, 0);
     }
 
     if ((m_timer.get() < stepTimeA2) && (step == 2)) {
@@ -90,6 +95,8 @@ public void autonInit() {
       step = 4; // increment step counter, move to next step
       m_timer.reset();
       m_timer.start();
+    } else {
+      driveTrain.driveArcade(0, 0);
     }
   }
 
@@ -108,6 +115,8 @@ public void autonInit() {
       step = 2; // increment step counter, move to next step
       m_timer.reset();
       m_timer.start();
+    } else {
+      driveTrain.driveArcade(0, 0);
     }
 
     if (step == 2) {
@@ -119,6 +128,8 @@ public void autonInit() {
       step = 3; // increment step counter, move to next step
       m_timer.reset();
       m_timer.start();
+    } else {
+      driveTrain.driveArcade(0, 0);
     }
 
     if ((m_timer.get() < stepTimeB3) && (step == 3)) {
@@ -139,6 +150,8 @@ public void autonInit() {
       step = 5; // increment step counter, move to next step
       m_timer.reset();
       m_timer.start();
+    } else {
+      driveTrain.driveArcade(0, 0);
     }
 
     if ((m_timer.get() < stepTimeB5) && (step == 5)) {
@@ -148,6 +161,8 @@ public void autonInit() {
       step = 6; // increment step counter, move to next step
       m_timer.reset();
       m_timer.start();
+    } else {
+      driveTrain.driveArcade(0, 0);
     }
 
     if ((m_timer.get() < stepTimeB6) && (step == 6)) {
@@ -166,6 +181,8 @@ public void autonInit() {
       step = 8; // increment step counter, move to next step
       m_timer.reset();
       m_timer.start();
+    } else {
+      driveTrain.driveArcade(0, 0);
     }
   }
 
@@ -184,6 +201,8 @@ public void autonInit() {
       step = 2; // increment step counter, move to next step
       m_timer.reset();
       m_timer.start();
+    } else {
+      driveTrain.driveArcade(0, 0);
     }
 
     if (step == 2) {
@@ -195,6 +214,8 @@ public void autonInit() {
       step = 3; // increment step counter, move to next step
       m_timer.reset();
       m_timer.start();
+    } else {
+      driveTrain.driveArcade(0, 0);
     }
 
     if ((m_timer.get() < stepTimeB3) && (step == 3)) {
@@ -215,6 +236,8 @@ public void autonInit() {
       step = 5; // increment step counter, move to next step
       m_timer.reset();
       m_timer.start();
+    } else {
+      driveTrain.driveArcade(0, 0);
     }
 
     if ((m_timer.get() < stepTimeB5) && (step == 5)) {
@@ -224,6 +247,8 @@ public void autonInit() {
       step = 6; // increment step counter, move to next step
       m_timer.reset();
       m_timer.start();
+    } else {
+      driveTrain.driveArcade(0, 0);
     }
 
     if ((m_timer.get() < stepTimeB6) && (step == 6)) {
@@ -242,6 +267,8 @@ public void autonInit() {
       step = 8; // increment step counter, move to next step
       m_timer.reset();
       m_timer.start();
+    } else {
+      driveTrain.driveArcade(0, 0);
     }
   }
 }
