@@ -32,7 +32,6 @@ public class DriveTrain {
       m_leftFtrMotor.setNeutralMode(NeutralMode.Brake);
       m_rightFrtMotor.setNeutralMode(NeutralMode.Brake);
       m_leftRrMotor.setNeutralMode(NeutralMode.Brake);
-      System.out.println("Look, I'm driving!");
       m_rightRrMotor.setNeutralMode(NeutralMode.Brake);
       m_robotDrive.tankDrive(Math.pow(m_driverController1.getY(Hand.kLeft), 3) * mtrSpeed, 
                              Math.pow(m_driverController1.getY(Hand.kRight), 3) * mtrSpeed,
