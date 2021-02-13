@@ -19,7 +19,7 @@ public class SkyWalker {
     public XboxController m_driverController2 = new XboxController(1);
     
     public void SkyWalk(){
-    
+        
         if (m_driverController2.getX(Hand.kLeft) > 0.1) {
             m_walk.set(m_driverController2.getX(Hand.kLeft) * 1);
         }

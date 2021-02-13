@@ -7,17 +7,16 @@
 
 package frc.robot;
 
+import edu.wpi.cscore.MjpegServer;
+import edu.wpi.cscore.VideoSink;
+import edu.wpi.cscore.VideoSource;
+import edu.wpi.first.cameraserver.CameraServer;
+
 //import com.ctre.phoenix.sensors.PigeonIMU;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.cscore.CvSink;
-import edu.wpi.cscore.CvSource;
-import edu.wpi.cscore.MjpegServer;
-import edu.wpi.cscore.UsbCamera;
-import edu.wpi.cscore.VideoSink;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -44,23 +43,28 @@ public class Robot extends TimedRobot {
   private static PID pid;
   private static SkyWalker skywalker;
   private static Auton auton;
-  private static UsbCamera usbCameraBack = new UsbCamera("USB Camera 0", 0);
-  private static MjpegServer mjpegServer1 = new MjpegServer("serve_USB Camera 0", 1181);
-  private static UsbCamera usbCameraFront = new UsbCamera("USB Camera 1", 1);
+  // private static UsbCamera usbCameraBack = new UsbCamera("USB Camera 0", 0);
+  // private static MjpegServer mjpegServer1 = new MjpegServer("serve_USB Camera
+  // 0", 1181);
+  // private static UsbCamera usbCameraFront = new UsbCamera("USB Camera 1", 1);
   private static VideoSink server;
-  //private PigeonIMU m_gyro;
+  private static Pi camera;
+  private static CameraServer camServer;
+  private static MjpegServer jpegServ;
+  private static VideoSource vSource;
+  // private PigeonIMU m_gyro;
 
   /**
-   * This function is run when the robot is first started up and should be
-   * used for any initialization code.
+   * This function is run when the robot is first started up and should be used
+   * for any initialization code.
    */
   @Override
   public void robotInit() {
-    CameraServer.getInstance().startAutomaticCapture();
-    CameraServer.getInstance().addCamera(usbCameraBack);
-    CameraServer.getInstance().addCamera(usbCameraFront);
-    mjpegServer1.setSource(usbCameraBack);
-    mjpegServer1.setSource(usbCameraFront);
+    // CameraServer.getInstance().startAutomaticCapture();
+    // CameraServer.getInstance().addCamera(usbCameraBack);
+    // CameraServer.getInstance().addCamera(usbCameraFront);
+    // mjpegServer1.setSource(usbCameraBack);
+    // mjpegServer1.setSource(usbCameraFront);
     m_chooser.setDefaultOption("Default 2s Move", kDefaultAuto);
     m_chooser.addOption("Front of Goal", kCustomAuto1);
     m_chooser.addOption("Left of Goal", kCustomAuto2);
@@ -70,14 +74,21 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto Choices", m_chooser);
 
     driveTrain = new DriveTrain();
-    //this.m_gyro = new PigeonIMU(driveTrain.m_leftRrMotor);
+    // this.m_gyro = new PigeonIMU(driveTrain.m_leftRrMotor);
     ingester = new Ingester();
     colorWheel = new ColorWheel();
     climber = new Climber();
     pid = new PID();
     skywalker = new SkyWalker();
     auton = new Auton(driveTrain);
-  }
+    camera = new Pi();
+    camServer = CameraServer.getInstance();
+    jpegServ = camServer.addServer("10.68.61.62");
+    camServer.addSwitchedCamera("OpenCV Camera");
+    //vSource = jpegServ.getSource();
+    //camServer.startAutomaticCapture(vSource);
+
+;  }
 
   /**
    * This function is called every robot packet, no matter the mode. Use
@@ -89,6 +100,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    camera.switchCameras();
   }
 
   /**
@@ -117,7 +129,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     System.out.println("Autonomous Periodic: " + m_autoSelected);
-    setCamera();
+    //setCamera();
 
     switch (m_autoSelected) {
       case kCustomAuto1:
@@ -169,28 +181,35 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void teleopPeriodic() {
-
+    System.out.println("Drive tank");
       driveTrain.driveTank();
+      System.out.println("Color Wheel");
       colorWheel.colorWheelSpin();
+      System.out.println("Climber");
       climber.climber();
+      System.out.println("Injetser");
       ingester.ingesterSweep();
+      System.out.println("pid");
       pid.commonLoop();
+      System.out.println("SkyWalker");
       skywalker.SkyWalk();
+      System.out.println("All teleop periodic statements have run");
 
-      setCamera();
+
+      //setCamera();
   }
 
-  private void setCamera() {
-    switch (cam_autoSelected) {
-      case kCameraBack:
-        server.setSource(usbCameraBack);
-        break;
-      case kCameraFront:
-      default:
-        server.setSource(usbCameraFront);
-        break;
-    }
-  }
+  // private void setCamera() {
+  //   switch (cam_autoSelected) {
+  //     case kCameraBack:
+  //       server.setSource(usbCameraBack);
+  //       break;
+  //     case kCameraFront:
+  //     default:
+  //       server.setSource(usbCameraFront);
+  //       break;
+  //   }
+  // }
 
   @Override
   public void testPeriodic() {
