@@ -26,194 +26,204 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default - Move 2s";
-  private static final String kCustomAuto1 = "Front of Goal";
-  private static final String kCustomAuto2 = "Left of Goal";
-  private static final String kCustomAuto3 = "Right of Goal";
-  private String m_autoSelected;
-  private final SendableChooser<String> m_chooser = new SendableChooser<>();
-  private final SendableChooser<String> cam_chooser = new SendableChooser<>();
-  private static final String kCameraBack = "Camera Back";
-  private static final String kCameraFront = "Camera Front";
-  private String cam_autoSelected;
-  private static DriveTrain driveTrain;
-  private static Ingester ingester;
-  private static ColorWheel colorWheel;
-  private static Climber climber;
-  private static PID pid;
-  private static SkyWalker skywalker;
-  private static Auton auton;
-  // private static UsbCamera usbCameraBack = new UsbCamera("USB Camera 0", 0);
-  // private static MjpegServer mjpegServer1 = new MjpegServer("serve_USB Camera
-  // 0", 1181);
-  // private static UsbCamera usbCameraFront = new UsbCamera("USB Camera 1", 1);
-  private static VideoSink server;
-  private static Pi camera;
-  private static CameraServer camServer;
-  private static MjpegServer jpegServ;
-  private static VideoSource vSource;
-  // private PigeonIMU m_gyro;
+    private static final String kDefaultAuto = "Default - Move 2s";
+    private static final String kCustomAuto1 = "Front of Goal";
+    private static final String kCustomAuto2 = "Left of Goal";
+    private static final String kCustomAuto3 = "Right of Goal";
+    private static final String kCustomAuto4 = "Turn towards Center";
+    private String m_autoSelected;
+    private final SendableChooser<String> m_chooser = new SendableChooser<>();
+    private final SendableChooser<String> cam_chooser = new SendableChooser<>();
+    private static final String kCameraBack = "Camera Back";
+    private static final String kCameraFront = "Camera Front";
+    private String cam_autoSelected;
+    private static DriveTrain driveTrain;
+    private static Ingester ingester;
+    private static ColorWheel colorWheel;
+    private static Climber climber;
+    private static PID pid;
+    private static SkyWalker skywalker;
+    private static Auton auton;
+    // private static UsbCamera usbCameraBack = new UsbCamera("USB Camera 0", 0);
+    // private static MjpegServer mjpegServer1 = new MjpegServer("serve_USB Camera
+    // 0", 1181);
+    // private static UsbCamera usbCameraFront = new UsbCamera("USB Camera 1", 1);
+    private static VideoSink server;
+    private static Pi camera;
+    private static CameraServer camServer;
+    private static MjpegServer jpegServ;
+    private static VideoSource vSource;
+    // private PigeonIMU m_gyro;
 
-  /**
-   * This function is run when the robot is first started up and should be used
-   * for any initialization code.
-   */
-  @Override
-  public void robotInit() {
-    // CameraServer.getInstance().startAutomaticCapture();
-    // CameraServer.getInstance().addCamera(usbCameraBack);
-    // CameraServer.getInstance().addCamera(usbCameraFront);
-    // mjpegServer1.setSource(usbCameraBack);
-    // mjpegServer1.setSource(usbCameraFront);
-    m_chooser.setDefaultOption("Default 2s Move", kDefaultAuto);
-    m_chooser.addOption("Front of Goal", kCustomAuto1);
-    m_chooser.addOption("Left of Goal", kCustomAuto2);
-    m_chooser.addOption("Right of Goal", kCustomAuto3);
-    cam_chooser.setDefaultOption("Front Camera", kCameraFront);
-    cam_chooser.addOption("Back Camera", kCameraBack);
-    SmartDashboard.putData("Auto Choices", m_chooser);
+    /**
+     * This function is run when the robot is first started up and should be used
+     * for any initialization code.
+     */
+    @Override
+    public void robotInit() {
+        // CameraServer.getInstance().startAutomaticCapture();
+        // CameraServer.getInstance().addCamera(usbCameraBack);
+        // CameraServer.getInstance().addCamera(usbCameraFront);
+        // mjpegServer1.setSource(usbCameraBack);
+        // mjpegServer1.setSource(usbCameraFront);
+        m_chooser.setDefaultOption("Default 2s Move", kDefaultAuto);
+        m_chooser.addOption("Front of Goal", kCustomAuto1);
+        m_chooser.addOption("Left of Goal", kCustomAuto2);
+        m_chooser.addOption("Right of Goal", kCustomAuto3);
+        m_chooser.addOption("Turn towards Center", kCustomAuto4);
+        cam_chooser.setDefaultOption("Front Camera", kCameraFront);
+        cam_chooser.addOption("Back Camera", kCameraBack);
+        SmartDashboard.putData("Auto Choices", m_chooser);
 
-    driveTrain = new DriveTrain();
-    // this.m_gyro = new PigeonIMU(driveTrain.m_leftRrMotor);
-    ingester = new Ingester();
-    colorWheel = new ColorWheel();
-    climber = new Climber();
-    pid = new PID();
-    skywalker = new SkyWalker();
-    auton = new Auton(driveTrain);
-    camera = new Pi();
-    camServer = CameraServer.getInstance();
-    jpegServ = camServer.addServer("10.68.61.62");
-    camServer.addSwitchedCamera("OpenCV Camera");
-    //vSource = jpegServ.getSource();
-    //camServer.startAutomaticCapture(vSource);
+        driveTrain = new DriveTrain();
+        // this.m_gyro = new PigeonIMU(driveTrain.m_leftRrMotor);
+        ingester = new Ingester();
+        colorWheel = new ColorWheel();
+        climber = new Climber();
+        pid = new PID();
+        skywalker = new SkyWalker();
+        auton = new Auton(driveTrain);
+        camera = new Pi();
+        camServer = CameraServer.getInstance();
+        jpegServ = camServer.addServer("10.68.61.62");
+        camServer.addSwitchedCamera("OpenCV Camera");
+        // vSource = jpegServ.getSource();
+        // camServer.startAutomaticCapture(vSource);
 
-;  }
+        ;
+    }
 
-  /**
-   * This function is called every robot packet, no matter the mode. Use
-   * this for items like diagnostics that you want ran during disabled,
-   * autonomous, teleoperated and test.
-   *
-   * <p>This runs after the mode specific periodic functions, but before
-   * LiveWindow and SmartDashboard integrated updating.
-   */
-  @Override
-  public void robotPeriodic() {
-    camera.switchCameras();
-  }
+    /**
+     * This function is called every robot packet, no matter the mode. Use this for
+     * items like diagnostics that you want ran during disabled, autonomous,
+     * teleoperated and test.
+     *
+     * <p>
+     * This runs after the mode specific periodic functions, but before LiveWindow
+     * and SmartDashboard integrated updating.
+     */
+    @Override
+    public void robotPeriodic() {
+        camera.switchCameras();
+    }
 
-  /**
-   * This autonomous (along with the chooser code above) shows how to select
-   * between different autonomous modes using the dashboard. The sendable
-   * chooser code works with the Java SmartDashboard. If you prefer the
-   * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-   * getString line to get the auto name from the text box below the Gyro
-   *
-   * <p>You can add additional auto modes by adding additional comparisons to
-   * the switch structure below with additional strings. If using the
-   * SendableChooser make sure to add them to the chooser code above as well.
-   */
-  @Override
-  public void autonomousInit() {
-    m_autoSelected = m_chooser.getSelected();
-    System.out.println("Auto selected: " + m_autoSelected);
-    pid.pidControl();
-    auton.autonInit();
-    //m_gyro.setFusedHeading(0);
-  }
+    /**
+     * This autonomous (along with the chooser code above) shows how to select
+     * between different autonomous modes using the dashboard. The sendable chooser
+     * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
+     * remove all of the chooser code and uncomment the getString line to get the
+     * auto name from the text box below the Gyro
+     *
+     * <p>
+     * You can add additional auto modes by adding additional comparisons to the
+     * switch structure below with additional strings. If using the SendableChooser
+     * make sure to add them to the chooser code above as well.
+     */
+    @Override
+    public void autonomousInit() {
+        m_autoSelected = m_chooser.getSelected();
+        System.out.println("Auto selected: " + m_autoSelected);
+        pid.pidControl();
+        auton.autonInit();
+        // m_gyro.setFusedHeading(0);
+    }
 
-  /**
-   * This function is called periodically during autonomous.
-   */
-  @Override
-  public void autonomousPeriodic() {
-    System.out.println("Autonomous Periodic: " + m_autoSelected);
-    //setCamera();
+    /**
+     * This function is called periodically during autonomous.
+     */
+    @Override
+    public void autonomousPeriodic() {
+        System.out.println("Autonomous Periodic: " + m_autoSelected);
+        // setCamera();
 
-    switch (m_autoSelected) {
-      case kCustomAuto1:
-        // Put custom auto code here
-        System.out.println("Front of Goal: " + m_autoSelected);
-        auton.autonFrontGoal();
+        switch (m_autoSelected) {
+        case kCustomAuto1:
+            // Put custom auto code here
+            System.out.println("Front of Goal: " + m_autoSelected);
+            auton.autonFrontGoal();
 
-        break;
+            break;
 
-      case kCustomAuto2:
-        // Put custom auto code here
-        System.out.println("Left of Goal: " + m_autoSelected);
-        auton.autonLeftGoal();
-        
-        break;
+        case kCustomAuto2:
+            // Put custom auto code here
+            System.out.println("Left of Goal: " + m_autoSelected);
+            auton.autonLeftGoal();
+
+            break;
 
         case kCustomAuto3:
-        // Put custom auto code here
-        System.out.println("Right of Goal: " + m_autoSelected);
-        auton.autonRightGoal();
-        
-        break;
+            // Put custom auto code here
+            System.out.println("Right of Goal: " + m_autoSelected);
+            auton.autonRightGoal();
 
-      case kDefaultAuto:
-      default:
-        // Put default auto code here
-        //System.out.println("Move 2 Seconds: " + m_autoSelected);
-        auton.autonMove2Sec();
-        
-        break;
+            break;
+
+        case kCustomAuto4:
+            System.out.println("Turn towards Center: " + m_autoSelected);
+            auton.centerRobot();
+
+            break;
+
+        case kDefaultAuto:
+        default:
+            // Put default auto code here
+            // System.out.println("Move 2 Seconds: " + m_autoSelected);
+            auton.autonMove2Sec();
+
+            break;
+
+        }
 
     }
-    
-  }
 
-  /**
-   * This function is called once each time the robot enters teleoperated mode.
-   */
-  @Override
-  public void teleopInit() {
-      
-      climber.climberInit();
-      pid.pidControl();
-      colorWheel.colorInit();
-  }
+    /**
+     * This function is called once each time the robot enters teleoperated mode.
+     */
+    @Override
+    public void teleopInit() {
 
-  /**
-   * This function is called periodically during operator control.
-   */
-  @Override
-  public void teleopPeriodic() {
-    System.out.println("Drive tank");
-      driveTrain.driveTank();
-      System.out.println("Color Wheel");
-      colorWheel.colorWheelSpin();
-      System.out.println("Climber");
-      climber.climber();
-      System.out.println("Injetser");
-      ingester.ingesterSweep();
-      System.out.println("pid");
-      pid.commonLoop();
-      System.out.println("SkyWalker");
-      skywalker.SkyWalk();
-      System.out.println("All teleop periodic statements have run");
+        climber.climberInit();
+        pid.pidControl();
+        colorWheel.colorInit();
+    }
 
+    /**
+     * This function is called periodically during operator control.
+     */
+    @Override
+    public void teleopPeriodic() {
+        System.out.println("Drive tank");
+        driveTrain.driveTank();
+        System.out.println("Color Wheel");
+        colorWheel.colorWheelSpin();
+        System.out.println("Climber");
+        climber.climber();
+        System.out.println("Injetser");
+        ingester.ingesterSweep();
+        System.out.println("pid");
+        pid.commonLoop();
+        System.out.println("SkyWalker");
+        skywalker.SkyWalk();
+        System.out.println("All teleop periodic statements have run");
 
-      //setCamera();
-  }
+        // setCamera();
+    }
 
-  // private void setCamera() {
-  //   switch (cam_autoSelected) {
-  //     case kCameraBack:
-  //       server.setSource(usbCameraBack);
-  //       break;
-  //     case kCameraFront:
-  //     default:
-  //       server.setSource(usbCameraFront);
-  //       break;
-  //   }
-  // }
+    // private void setCamera() {
+    // switch (cam_autoSelected) {
+    // case kCameraBack:
+    // server.setSource(usbCameraBack);
+    // break;
+    // case kCameraFront:
+    // default:
+    // server.setSource(usbCameraFront);
+    // break;
+    // }
+    // }
 
-  @Override
-  public void testPeriodic() {
-    
-  }
+    @Override
+    public void testPeriodic() {
+
+    }
 
 }
