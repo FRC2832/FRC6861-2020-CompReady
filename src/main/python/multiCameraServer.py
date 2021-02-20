@@ -445,7 +445,7 @@ def extra_processing(pipeline):
     center_x_positions = []
 
     # Find the bounding boxes of the contours to get x, y, width, and height
-    print("all filtered contours:" +str(pipeline.filter_contours_output))
+    # print("all filtered contours:" +str(pipeline.filter_contours_output))
     for contour in pipeline.filter_contours_output:
         x, y, w, h = cv2.boundingRect(contour)
         center_x_positions.append(x + w / 2)
@@ -654,14 +654,14 @@ if __name__ == "__main__":
     while True:
         if cvSink is not None:
             ret, img = cvSink.grabFrame(img)
-            print("I grabbed a frame")
+            #("I grabbed a frame")
         else:
             ret = None
-            print("I DIDNT grab a frame")
+            #print("I DIDNT grab a frame")
         if ret:
             img_proc.process(img)
-            print("img_proc done")
+            #print("img_proc done")
             extra_processing(img_proc)
-            print("extra_processing done")
+            #print("extra_processing done")
         # time.sleep(10)
         # outputStream.putFrame(img)
