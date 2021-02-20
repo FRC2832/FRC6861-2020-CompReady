@@ -7,9 +7,11 @@
 import json
 import time
 import sys
+import cv2
+import numpy as np
 
 from cscore import CameraServer, VideoSource, UsbCamera, MjpegServer
-from networktables import NetworkTablesInstance
+from networktables import NetworkTablesInstance, NetworkTables
 from enum import Enum
 
 #   JSON format:
@@ -54,7 +56,8 @@ from enum import Enum
 #   }
 
 configFile = "/boot/frc.json"
-
+cvSink = None
+# isSinkMade = False
 
 class CameraConfig: pass
 
@@ -66,11 +69,11 @@ class ImgProc:
         """initializes all values to presets or None if need to be set
         """
 
-        self.__hsv_threshold_hue = [51.798561151079134, 180.0]
-        self.__hsv_threshold_saturation = [
-            34.39748201438849, 132.65151515151513
-        ]
-        self.__hsv_threshold_value = [233.90287769784172, 255.0]
+        # self.__hsv_threshold_hue = [51.798561151079134, 180.0]
+        # self.__hsv_threshold_saturation = [
+        #     34.39748201438849, 132.65151515151513
+        # ]
+        # self.__hsv_threshold_value = [233.90287769784172, 255.0]
 
         self.hsv_threshold_output = None
 
@@ -385,9 +388,13 @@ def readConfig():
 def startCamera(config):
     """Start running the camera."""
     print("Starting camera '{}' on {}".format(config.name, config.path))
+    global inst
     inst = CameraServer.getInstance()
     camera = UsbCamera(config.name, config.path)
     server = inst.startAutomaticCapture(camera=camera, return_server=True)
+    # if not isSinkMade:
+    #     cvSink = inst.getVideo()
+    #     isSinkMade = True
 
     camera.setConfigJson(json.dumps(config.config))
     camera.setConnectionStrategy(VideoSource.ConnectionStrategy.kKeepOpen)
@@ -452,10 +459,17 @@ if __name__ == "__main__":
     img_proc = ImgProc()
     # loop forever
 
-
+    img = np.zeros(shape=(240, 320, 3), dtype=np.uint8)
+    cvSink = inst.getVideo()
     while True:
-        ret, img = cameras[0].read()
+        print("I'm in the loop!")
+        if cvSink is not None:
+            ret, img = cvSink.grabFrame(img)
+        else:
+            ret = None
+        print(ret)
         if ret:
+            print("I'm in the if ret")
             img_proc.process(img)
             extra_processing(img_proc)
-        time.sleep(10)
+        # time.sleep(10)
