@@ -25,6 +25,9 @@ public class Auton {
     private double stepTimeB7 = 3.0;
 
     private double stepTimeC1 = 2.0; // Default Move Time
+    private double stepTimeC2 = 1.0;
+
+    private static boolean move1SecDone = true;
 
     private int step = 1;
 
@@ -59,6 +62,34 @@ public class Auton {
         } else {
             driveTrain.driveArcade(0, 0);
         }
+    }
+
+    public void move1Sec() {
+        double timerValue = m_timer.get();
+        SmartDashboard.putString("Auton Mode", "move1Sec");
+        SmartDashboard.putNumber("Auton Step", step);
+        SmartDashboard.putNumber("Gyro Fused Heading", m_gyro.getFusedHeading());
+        SmartDashboard.putNumber("Timer", timerValue);
+        if ((timerValue < stepTimeC2) && (step == 1)) {
+            driveTrain.driveArcade(0.6, 0.0);
+        } else if ((timerValue > stepTimeC2) && (step == 1)) {
+            driveTrain.driveArcade(0, 0);
+            step = 2; // increment step counter, move to next step
+            // Auton.setMove1SecDone(true); // TODO: is this right?
+            m_timer.reset();
+            m_timer.start();
+        } else {
+            driveTrain.driveArcade(0, 0);
+            Auton.setMove1SecDone(true);
+        }
+    }
+
+    public static void setMove1SecDone(boolean done) {
+        move1SecDone = done;
+    }
+
+    public static boolean getMove1SecDone() {
+        return move1SecDone;
     }
 
     // Autonomous mode: Robot positioned directly in front of the scoring goal
@@ -271,15 +302,23 @@ public class Auton {
             driveTrain.driveArcade(0, 0);
         }
     }
-
+    
     public void centerRobot() {
+        System.out.println("centering robot");
         if (Pi.getMoveLeft()) {
-            driveTrain.driveTank(-0.25, 0.25);
+            driveTrain.driveTank(-0.2, 0.2);
+            // System.out.println("turning left");
         } else if (Pi.getMoveRight()) {
-            driveTrain.driveTank(0.25, -0.25);
+            driveTrain.driveTank(0.2, -0.2);
+            // System.out.println("turning right");
         } else {
             driveTrain.driveTank(0, 0);
+            // System.out.println("not turning");
         }
+    }
+
+    public void centerAndMove() {
+        
     }
 
 }

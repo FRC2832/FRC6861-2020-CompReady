@@ -22,7 +22,7 @@ public class Pi {
     public Pi() {
         m_driverController1 = new XboxController(0);
         netTableInstance = NetworkTableInstance.getDefault();
-        table = netTableInstance.getTable("data table");
+        table = netTableInstance.getTable("datatable");
         // camSelect = netTableInstance.getTable("SmartDashboard").getEntry("camNumber");
         targetCenterX = netTableInstance.getTable("datatable").getEntry("x");
         // targetCenterX.getNumberArray(new Number[0]);
@@ -31,21 +31,28 @@ public class Pi {
 
     public void processTargets() {
         Number[] targetArray = targetCenterX.getNumberArray(new Number[0]);
-        if (targetArray.length == 0) 
+        if (targetArray.length == 0) {
+            moveRight = false;
+            moveLeft = false;
             return;
+        }
         // for (Number n : targetArray) {
         //     double targetX = (double) n;
         // }
-        double targetX = (double) targetArray[0];
-        if (targetX < (CAM_X_RES / 2) - (CAM_X_RES * 0.025)) {
+        double targetX = (double) targetArray[targetArray.length - 1];
+        System.out.println("target x value: " + targetX);
+        if (targetX < (CAM_X_RES / 2) - (CAM_X_RES * 0.03)) {
             moveRight = false;
             moveLeft = true;
-        } else if (targetX > (CAM_X_RES / 2) + (CAM_X_RES * 0.025)) {
+            // System.out.println(moveRight + "\n" + moveLeft);
+        } else if (targetX > (CAM_X_RES / 2) + (CAM_X_RES * 0.03)) {
             moveLeft = false;
             moveRight = true;
+            // System.out.println(moveRight + "\n" + moveLeft);
         } else {
             moveRight = false;
             moveLeft = false;
+            // System.out.println(moveRight + "\n" + moveLeft);
         }
     }
 
@@ -57,7 +64,7 @@ public class Pi {
         return moveLeft;
     }
 
-    public boolean getCentered() {
+    public static boolean getCentered() {
         return !moveRight && !moveLeft;
     }
 

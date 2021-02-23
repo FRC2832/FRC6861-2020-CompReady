@@ -89,8 +89,7 @@ public class Robot extends TimedRobot {
         camServer.addSwitchedCamera("OpenCV Camera");
         // vSource = jpegServ.getSource();
         // camServer.startAutomaticCapture(vSource);
-
-        ;
+        // camera.processTargets();
     }
 
     /**
@@ -104,6 +103,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotPeriodic() {
+        camera.processTargets();
         camera.switchCameras();
     }
 
@@ -160,7 +160,22 @@ public class Robot extends TimedRobot {
 
         case kCustomAuto4:
             System.out.println("Turn towards Center: " + m_autoSelected);
-            auton.centerRobot();
+            if (!Auton.getMove1SecDone()) {
+                System.out.println("move1Sec");
+                auton.move1Sec();
+            } else {
+                if (Pi.getCentered()) {
+                    Auton.setMove1SecDone(false);
+                } else {
+                    auton.centerRobot();
+                }
+            }
+            // if (!Pi.getCentered() && Auton.getMove1SecDone()) {
+            //     auton.centerRobot();
+            // } else {
+            //     System.out.println("move1Sec");
+            //     auton.move1Sec();
+            // }
 
             break;
 

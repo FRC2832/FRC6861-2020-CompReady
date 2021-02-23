@@ -47,7 +47,7 @@ public class DriveTrain {
     m_rightFrtMotor.setNeutralMode(NeutralMode.Brake);
     m_leftRrMotor.setNeutralMode(NeutralMode.Brake);
     m_rightRrMotor.setNeutralMode(NeutralMode.Brake);
-    m_robotDrive.tankDrive(leftSpeed, rightSpeed);
+    m_robotDrive.tankDrive(leftSpeed, rightSpeed, false);
   }
 
   public void driveArcade(double speed, double rotations) {
