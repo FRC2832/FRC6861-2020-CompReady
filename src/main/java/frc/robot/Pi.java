@@ -41,11 +41,11 @@ public class Pi {
         // }
         double targetX = (double) targetArray[targetArray.length - 1];
         System.out.println("target x value: " + targetX);
-        if (targetX < (CAM_X_RES / 2) - (CAM_X_RES * 0.03)) {
+        if (targetX < (CAM_X_RES / 2) - (CAM_X_RES * 0.05)) {
             moveRight = false;
             moveLeft = true;
             // System.out.println(moveRight + "\n" + moveLeft);
-        } else if (targetX > (CAM_X_RES / 2) + (CAM_X_RES * 0.03)) {
+        } else if (targetX > (CAM_X_RES / 2) + (CAM_X_RES * 0.05)) {
             moveLeft = false;
             moveRight = true;
             // System.out.println(moveRight + "\n" + moveLeft);

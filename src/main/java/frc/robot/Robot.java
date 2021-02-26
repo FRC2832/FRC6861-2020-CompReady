@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
     private static final String kCameraBack = "Camera Back";
     private static final String kCameraFront = "Camera Front";
     private String cam_autoSelected;
+    private static boolean isCenterAutonSelected;
     private static DriveTrain driveTrain;
     private static Ingester ingester;
     private static ColorWheel colorWheel;
@@ -66,11 +67,13 @@ public class Robot extends TimedRobot {
         // CameraServer.getInstance().addCamera(usbCameraFront);
         // mjpegServer1.setSource(usbCameraBack);
         // mjpegServer1.setSource(usbCameraFront);
-        m_chooser.setDefaultOption("Default 2s Move", kDefaultAuto);
+        // m_chooser.setDefaultOption("Default 2s Move", kDefaultAuto);
+        m_chooser.setDefaultOption("Turn towards Center", kCustomAuto4);
+        m_chooser.addOption("Default 2s Move", kDefaultAuto);
         m_chooser.addOption("Front of Goal", kCustomAuto1);
         m_chooser.addOption("Left of Goal", kCustomAuto2);
         m_chooser.addOption("Right of Goal", kCustomAuto3);
-        m_chooser.addOption("Turn towards Center", kCustomAuto4);
+        // m_chooser.addOption("Turn towards Center", kCustomAuto4);
         cam_chooser.setDefaultOption("Front Camera", kCameraFront);
         cam_chooser.addOption("Back Camera", kCameraBack);
         SmartDashboard.putData("Auto Choices", m_chooser);
@@ -122,10 +125,12 @@ public class Robot extends TimedRobot {
     @Override
     public void autonomousInit() {
         m_autoSelected = m_chooser.getSelected();
+        isCenterAutonSelected = m_autoSelected.equalsIgnoreCase(kCustomAuto4);
         System.out.println("Auto selected: " + m_autoSelected);
         pid.pidControl();
         auton.autonInit();
         // m_gyro.setFusedHeading(0);
+        camera.processTargets();
     }
 
     /**
@@ -136,56 +141,65 @@ public class Robot extends TimedRobot {
         System.out.println("Autonomous Periodic: " + m_autoSelected);
         // setCamera();
 
-        switch (m_autoSelected) {
-        case kCustomAuto1:
-            // Put custom auto code here
-            System.out.println("Front of Goal: " + m_autoSelected);
-            auton.autonFrontGoal();
-
-            break;
-
-        case kCustomAuto2:
-            // Put custom auto code here
-            System.out.println("Left of Goal: " + m_autoSelected);
-            auton.autonLeftGoal();
-
-            break;
-
-        case kCustomAuto3:
-            // Put custom auto code here
-            System.out.println("Right of Goal: " + m_autoSelected);
-            auton.autonRightGoal();
-
-            break;
-
-        case kCustomAuto4:
-            System.out.println("Turn towards Center: " + m_autoSelected);
-            if (!Auton.getMove1SecDone()) {
-                System.out.println("move1Sec");
-                auton.move1Sec();
-            } else {
-                if (Pi.getCentered()) {
-                    Auton.setMove1SecDone(false);
-                } else {
+        if (isCenterAutonSelected && !Auton.getMove1SecDone()) {
+            System.out.println("Move 1 Second in the if");
+            auton.move1Sec();
+        } else {
+            switch (m_autoSelected) {
+                case kCustomAuto1:
+                    // Put custom auto code here
+                    System.out.println("Front of Goal: " + m_autoSelected);
+                    auton.autonFrontGoal();
+        
+                    break;
+        
+                case kCustomAuto2:
+                    // Put custom auto code here
+                    System.out.println("Left of Goal: " + m_autoSelected);
+                    auton.autonLeftGoal();
+        
+                    break;
+        
+                case kCustomAuto3:
+                    // Put custom auto code here
+                    System.out.println("Right of Goal: " + m_autoSelected);
+                    auton.autonRightGoal();
+        
+                    break;
+        
+                case kCustomAuto4:
+                    System.out.println("Turn towards Center: " + m_autoSelected);
                     auton.centerRobot();
-                }
+
+                    // if (!Auton.getMove1SecDone()) {
+                    //     System.out.println("move1Sec");
+                    //     auton.move1Sec();
+                    // } else {
+                    //     if (Pi.getCentered()) {
+                    //         auton.move1Sec();
+                    //     } else {
+                    //         auton.centerRobot();
+                    //     }
+                    // }
+                    // if (!Pi.getCentered() && Auton.getMove1SecDone()) {
+                    //     auton.centerRobot();
+                    // } else {
+                    //     System.out.println("move1Sec");
+                    //     auton.move1Sec();
+                    // }
+        
+                    break;
+        
+                case kDefaultAuto:
+                default:
+                    // Put default auto code here
+                    // System.out.println("Move 2 Seconds: " + m_autoSelected);
+                    // auton.autonMove2Sec();
+                    System.out.println("Move 1 Second");
+                    auton.move1Sec();
+        
+                    break;
             }
-            // if (!Pi.getCentered() && Auton.getMove1SecDone()) {
-            //     auton.centerRobot();
-            // } else {
-            //     System.out.println("move1Sec");
-            //     auton.move1Sec();
-            // }
-
-            break;
-
-        case kDefaultAuto:
-        default:
-            // Put default auto code here
-            // System.out.println("Move 2 Seconds: " + m_autoSelected);
-            auton.autonMove2Sec();
-
-            break;
 
         }
 

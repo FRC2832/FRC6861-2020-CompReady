@@ -71,7 +71,7 @@ public class Auton {
         SmartDashboard.putNumber("Gyro Fused Heading", m_gyro.getFusedHeading());
         SmartDashboard.putNumber("Timer", timerValue);
         if ((timerValue < stepTimeC2) && (step == 1)) {
-            driveTrain.driveArcade(0.6, 0.0);
+            driveTrain.driveArcade(0.4, 0.0);
         } else if ((timerValue > stepTimeC2) && (step == 1)) {
             driveTrain.driveArcade(0, 0);
             step = 2; // increment step counter, move to next step
@@ -80,7 +80,11 @@ public class Auton {
             m_timer.start();
         } else {
             driveTrain.driveArcade(0, 0);
+            System.out.println("move1SecDone = true");
             Auton.setMove1SecDone(true);
+            step = 1;
+            m_timer.reset();
+            m_timer.start();
         }
     }
 
@@ -307,13 +311,15 @@ public class Auton {
         System.out.println("centering robot");
         if (Pi.getMoveLeft()) {
             driveTrain.driveTank(-0.2, 0.2);
-            // System.out.println("turning left");
+            System.out.println("turning left");
         } else if (Pi.getMoveRight()) {
             driveTrain.driveTank(0.2, -0.2);
-            // System.out.println("turning right");
+            System.out.println("turning right");
         } else {
             driveTrain.driveTank(0, 0);
-            // System.out.println("not turning");
+            System.out.println("not turning");
+            System.out.println("move1SecDone = false");
+            Auton.setMove1SecDone(false);
         }
     }
 
