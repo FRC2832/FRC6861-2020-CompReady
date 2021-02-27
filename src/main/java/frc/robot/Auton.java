@@ -31,6 +31,7 @@ public class Auton {
     private static boolean move1SecDone = true;
     private static boolean moveHalfSecDone = true;
     private static boolean isAutonDone;
+    private static boolean isScoreReady;
 
     private int step = 1;
 
@@ -110,6 +111,26 @@ public class Auton {
             driveTrain.driveArcade(0, 0);
             System.out.println("moveHalfSecDone = true");
             Auton.setMoveHalfSecDone(true);
+            Auton.setIsScoreReady(true);
+            step = 1;
+            m_timer.reset();
+            m_timer.start();
+        }
+    }
+
+    public void score() {
+        double timerValue = m_timer.get();
+        if ((timerValue < stepTimeC3) && (step == 1)) {
+            ingester.ingesterAuton(-1.0);
+        } else if ((timerValue > stepTimeC3) && (step == 1)) {
+            ingester.ingesterAuton(0.0);
+            step = 2; // increment step counter, move to next step
+            // Auton.setMove1SecDone(true); // TODO: is this right?
+            m_timer.reset();
+            m_timer.start();
+        } else {
+            ingester.ingesterAuton(0.0);
+            Auton.setIsScoreReady(false);
             isAutonDone = true;
             step = 1;
             m_timer.reset();
@@ -135,6 +156,14 @@ public class Auton {
 
     public static boolean getIsAutonDone() {
         return isAutonDone;
+    }
+
+    public static boolean getIsScoreReady() {
+        return isScoreReady;
+    }
+
+    public static void setIsScoreReady(boolean done) {
+        isScoreReady = done;
     }
 
     // Autonomous mode: Robot positioned directly in front of the scoring goal
