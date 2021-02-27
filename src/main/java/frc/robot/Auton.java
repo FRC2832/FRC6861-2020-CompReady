@@ -26,8 +26,11 @@ public class Auton {
 
     private double stepTimeC1 = 2.0; // Default Move Time
     private double stepTimeC2 = 1.5;
+    private double stepTimeC3 = 2.0;
 
     private static boolean move1SecDone = true;
+    private static boolean moveHalfSecDone = true;
+    private static boolean isAutonDone;
 
     private int step = 1;
 
@@ -42,6 +45,7 @@ public class Auton {
         m_timer.reset();
         m_timer.start();
         SmartDashboard.putNumber("Gyro Fused Heading", m_gyro.getFusedHeading());
+        isAutonDone = false;
     }
 
     // Autonomous mode: Robot positioned anywhere on the line
@@ -88,12 +92,49 @@ public class Auton {
         }
     }
 
+    public void moveHalfSec() {
+        double timerValue = m_timer.get();
+        SmartDashboard.putString("Auton Mode", "move1Sec");
+        SmartDashboard.putNumber("Auton Step", step);
+        SmartDashboard.putNumber("Gyro Fused Heading", m_gyro.getFusedHeading());
+        SmartDashboard.putNumber("Timer", timerValue);
+        if ((timerValue < stepTimeC3) && (step == 1)) {
+            driveTrain.driveArcade(0.6, 0.0);
+        } else if ((timerValue > stepTimeC3) && (step == 1)) {
+            driveTrain.driveArcade(0, 0);
+            step = 2; // increment step counter, move to next step
+            // Auton.setMove1SecDone(true); // TODO: is this right?
+            m_timer.reset();
+            m_timer.start();
+        } else {
+            driveTrain.driveArcade(0, 0);
+            System.out.println("moveHalfSecDone = true");
+            Auton.setMoveHalfSecDone(true);
+            isAutonDone = true;
+            step = 1;
+            m_timer.reset();
+            m_timer.start();
+        }
+    }
+
     public static void setMove1SecDone(boolean done) {
         move1SecDone = done;
     }
 
     public static boolean getMove1SecDone() {
         return move1SecDone;
+    }
+
+    public static void setMoveHalfSecDone(boolean done) {
+        moveHalfSecDone = done;
+    }
+
+    public static boolean getMoveHalfSecDone() {
+        return moveHalfSecDone;
+    }
+
+    public static boolean getIsAutonDone() {
+        return isAutonDone;
     }
 
     // Autonomous mode: Robot positioned directly in front of the scoring goal

@@ -144,6 +144,12 @@ public class Robot extends TimedRobot {
         if (isCenterAutonSelected && !Auton.getMove1SecDone()) {
             System.out.println("Move 1 Second in the if");
             auton.move1Sec();
+        } else if (isCenterAutonSelected && !Auton.getMoveHalfSecDone()) {
+            if (Auton.getIsAutonDone()) {
+                driveTrain.driveTank(0.0, 0.0);
+            } else {
+                auton.moveHalfSec();
+            }
         } else {
             switch (m_autoSelected) {
                 case kCustomAuto1:
@@ -169,10 +175,13 @@ public class Robot extends TimedRobot {
         
                 case kCustomAuto4:
                     // System.out.println("Turn towards Center: " + m_autoSelected);
-                    if (Pi.getHasFoundTarget()) {
+                    if (Pi.getHasFoundTarget() && !Auton.getIsAutonDone()) {
                         auton.centerRobot();
                     } else {
                         driveTrain.driveTank(0,0);
+                        if (!Auton.getIsAutonDone()) {
+                            Auton.setMoveHalfSecDone(false);
+                        }
                     }
 
                     // if (!Auton.getMove1SecDone()) {
