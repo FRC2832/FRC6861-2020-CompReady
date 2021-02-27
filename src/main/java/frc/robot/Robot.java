@@ -138,7 +138,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousPeriodic() {
-        System.out.println("Autonomous Periodic: " + m_autoSelected);
+        // System.out.println("Autonomous Periodic: " + m_autoSelected);
         // setCamera();
 
         if (isCenterAutonSelected && !Auton.getMove1SecDone()) {
@@ -168,7 +168,7 @@ public class Robot extends TimedRobot {
                     break;
         
                 case kCustomAuto4:
-                    System.out.println("Turn towards Center: " + m_autoSelected);
+                    // System.out.println("Turn towards Center: " + m_autoSelected);
                     auton.centerRobot();
 
                     // if (!Auton.getMove1SecDone()) {

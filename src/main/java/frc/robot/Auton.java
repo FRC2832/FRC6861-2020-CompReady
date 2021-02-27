@@ -25,7 +25,7 @@ public class Auton {
     private double stepTimeB7 = 3.0;
 
     private double stepTimeC1 = 2.0; // Default Move Time
-    private double stepTimeC2 = 1.0;
+    private double stepTimeC2 = 1.5;
 
     private static boolean move1SecDone = true;
 
@@ -71,7 +71,7 @@ public class Auton {
         SmartDashboard.putNumber("Gyro Fused Heading", m_gyro.getFusedHeading());
         SmartDashboard.putNumber("Timer", timerValue);
         if ((timerValue < stepTimeC2) && (step == 1)) {
-            driveTrain.driveArcade(0.4, 0.0);
+            driveTrain.driveArcade(0.5, 0.0);
         } else if ((timerValue > stepTimeC2) && (step == 1)) {
             driveTrain.driveArcade(0, 0);
             step = 2; // increment step counter, move to next step
@@ -308,7 +308,7 @@ public class Auton {
     }
     
     public void centerRobot() {
-        System.out.println("centering robot");
+        // System.out.println("centering robot");
         if (Pi.getMoveLeft()) {
             driveTrain.driveTank(-0.2, 0.2);
             System.out.println("turning left");

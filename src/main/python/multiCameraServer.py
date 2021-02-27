@@ -443,16 +443,19 @@ def extra_processing(pipeline):
         :return: None
         """
     center_x_positions = []
+    widths = []
 
     # Find the bounding boxes of the contours to get x, y, width, and height
     # print("all filtered contours:" +str(pipeline.filter_contours_output))
     for contour in pipeline.filter_contours_output:
         x, y, w, h = cv2.boundingRect(contour)
         center_x_positions.append(x + w / 2)
+        widths.append(w)
     print('center x', center_x_positions)
     # Publish to the '/vision/red_areas' network table
     table = NetworkTables.getTable('datatable')
     table.putNumberArray('x', center_x_positions)
+    table.putNumberArray('w', widths)
 
 
 

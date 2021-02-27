@@ -13,6 +13,7 @@ public class Pi {
     private boolean isButtonHeld;
     private XboxController m_driverController1;
     private NetworkTableEntry targetCenterX;
+    private NetworkTableEntry targetWidth;
     private final double CAM_X_RES = 1280;
     private final double CAM_Y_RES = 720;
     private static boolean moveRight;
@@ -24,22 +25,26 @@ public class Pi {
         netTableInstance = NetworkTableInstance.getDefault();
         table = netTableInstance.getTable("datatable");
         // camSelect = netTableInstance.getTable("SmartDashboard").getEntry("camNumber");
-        targetCenterX = netTableInstance.getTable("datatable").getEntry("x");
+        targetCenterX = table.getEntry("x");
+        targetWidth = table.getEntry("w");
         // targetCenterX.getNumberArray(new Number[0]);
         CameraServer.getInstance().addServer("10.68.61.62");
     }
 
     public void processTargets() {
-        Number[] targetArray = targetCenterX.getNumberArray(new Number[0]);
-        if (targetArray.length == 0) {
+        Number[] targetCenterArray = targetCenterX.getNumberArray(new Number[0]);
+        Number[] targetWidthArray = targetWidth.getNumberArray(new Number[0]);
+        if (targetCenterArray.length == 0) {
             moveRight = false;
             moveLeft = false;
             return;
         }
-        // for (Number n : targetArray) {
+        // for (Number n : targetCenterArray) {
         //     double targetX = (double) n;
         // }
-        double targetX = (double) targetArray[targetArray.length - 1];
+        double targetX = (double) targetCenterArray[targetCenterArray.length - 1]; //rightmost target
+        double targetW = (double) targetWidthArray[targetWidthArray.length - 1];
+        System.out.println("width: " + targetW);
         System.out.println("target x value: " + targetX);
         if (targetX < (CAM_X_RES / 2) - (CAM_X_RES * 0.05)) {
             moveRight = false;
