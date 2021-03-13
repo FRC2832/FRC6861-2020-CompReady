@@ -13,7 +13,8 @@ public class Pi {
     private boolean isButtonHeld;
     private XboxController m_driverController1;
     private NetworkTableEntry targetCenterX;
-    private NetworkTableEntry targetWidth;
+    private NetworkTableEntry powerCellCenterX;
+    private NetworkTableEntry powerCellCenterY;
     private final double CAM_X_RES = 1280;
     private final double CAM_Y_RES = 720;
     private static boolean moveRight;
@@ -26,15 +27,24 @@ public class Pi {
         netTableInstance = NetworkTableInstance.getDefault();
         table = netTableInstance.getTable("datatable");
         // camSelect = netTableInstance.getTable("SmartDashboard").getEntry("camNumber");
-        targetCenterX = table.getEntry("x");
-        targetWidth = table.getEntry("w");
+        targetCenterX = table.getEntry("targetX");
+        powerCellCenterX = table.getEntry("powerCellX");
+        powerCellCenterY = table.getEntry("powerCellY");
         // targetCenterX.getNumberArray(new Number[0]);
         CameraServer.getInstance().addServer("10.68.61.62");
     }
 
+    public void processPowerCells() {
+        Number[] powerCellCenterXArray = powerCellCenterX.getNumberArray(new Number[0]);
+        Number[] powerCellCenterYArray = powerCellCenterY.getNumberArray(new Number[0]);
+        if (powerCellCenterXArray.length == 0) {
+            return;
+        }
+        
+    }
+
     public void processTargets() {
         Number[] targetCenterArray = targetCenterX.getNumberArray(new Number[0]);
-        Number[] targetWidthArray = targetWidth.getNumberArray(new Number[0]);
         if (targetCenterArray.length == 0) {
             Auton.setMove1SecDone(true);
             hasFoundTarget = false;
@@ -44,8 +54,6 @@ public class Pi {
         }
         hasFoundTarget = true;
         double targetX = (double) targetCenterArray[targetCenterArray.length - 1]; //rightmost target
-        double targetW = (double) targetWidthArray[targetWidthArray.length - 1];
-        // System.out.println("width: " + targetW);
         System.out.println("target x value: " + targetX);
         if (targetX < (CAM_X_RES / 2) - (CAM_X_RES * 0.05)) {
             moveRight = false;
