@@ -19,7 +19,7 @@ public class Pi {
     private final double CAM_Y_RES = 720;
     private static boolean moveRight;
     private static boolean moveLeft;
-    private static boolean hasFoundTarget;
+    private static boolean hasFoundObjective;
 
 
     public Pi() {
@@ -38,7 +38,20 @@ public class Pi {
         Number[] powerCellCenterXArray = powerCellCenterX.getNumberArray(new Number[0]);
         Number[] powerCellCenterYArray = powerCellCenterY.getNumberArray(new Number[0]);
         if (powerCellCenterXArray.length == 0) {
+            hasFoundObjective = false;
             return;
+        }
+        hasFoundObjective = true;
+        double powerCellX = (double) powerCellCenterXArray[0];
+        if (powerCellX < (CAM_X_RES / 2) - (CAM_X_RES * 0.05)) {
+            moveRight = false;
+            moveLeft = true;
+        } else if (powerCellX > (CAM_X_RES / 2) + (CAM_X_RES * 0.05)) {
+            moveLeft = false;
+            moveRight = true;
+        } else {
+            moveRight = false;
+            moveLeft = false;
         }
         
     }
@@ -47,12 +60,12 @@ public class Pi {
         Number[] targetCenterArray = targetCenterX.getNumberArray(new Number[0]);
         if (targetCenterArray.length == 0) {
             Auton.setMove1SecDone(true);
-            hasFoundTarget = false;
+            hasFoundObjective = false;
             moveRight = false;
             moveLeft = false;
             return;
         }
-        hasFoundTarget = true;
+        hasFoundObjective = true;
         double targetX = (double) targetCenterArray[targetCenterArray.length - 1]; //rightmost target
         System.out.println("target x value: " + targetX);
         if (targetX < (CAM_X_RES / 2) - (CAM_X_RES * 0.05)) {
@@ -82,8 +95,8 @@ public class Pi {
         return !moveRight && !moveLeft;
     }
 
-    public static boolean getHasFoundTarget() {
-        return hasFoundTarget;
+    public static boolean getHasFoundObjective() {
+        return hasFoundObjective;
     }
 
     public void switchCameras() {

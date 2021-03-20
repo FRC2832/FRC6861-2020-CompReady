@@ -145,7 +145,22 @@ public class PID {
 		/* Reset built string for next loop */
 		_sb.setLength(0);
 		
-    }
+	}
+	
+	public void autonLoop() {
+		// if (_xBox.getBumperPressed(Hand.kRight)) {
+		// 	targetPositionRotations = 0;
+		// 	_talon.set(ControlMode.Position, targetPositionRotations);
+        // }
+
+		if (Auton.getPutIngesterDown()) {
+			targetPositionRotations = -4500;
+		} else {
+			targetPositionRotations = -600;
+		}
+		_talon.set(ControlMode.Position, targetPositionRotations);
+
+	}
 
 
 }

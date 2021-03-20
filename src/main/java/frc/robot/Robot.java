@@ -31,6 +31,7 @@ public class Robot extends TimedRobot {
     private static final String kCustomAuto2 = "Left of Goal";
     private static final String kCustomAuto3 = "Right of Goal";
     private static final String kCustomAuto4 = "Turn towards Center";
+    private static final String kCustomAuto5 = "Find Power Cell";
     private String m_autoSelected;
     private final SendableChooser<String> m_chooser = new SendableChooser<>();
     private final SendableChooser<String> cam_chooser = new SendableChooser<>();
@@ -73,6 +74,7 @@ public class Robot extends TimedRobot {
         m_chooser.addOption("Front of Goal", kCustomAuto1);
         m_chooser.addOption("Left of Goal", kCustomAuto2);
         m_chooser.addOption("Right of Goal", kCustomAuto3);
+        m_chooser.addOption("Find Power Cell", kCustomAuto5);
         // m_chooser.addOption("Turn towards Center", kCustomAuto4);
         cam_chooser.setDefaultOption("Front Camera", kCameraFront);
         cam_chooser.addOption("Back Camera", kCameraBack);
@@ -108,6 +110,7 @@ public class Robot extends TimedRobot {
     public void robotPeriodic() {
         camera.processTargets();
         camera.switchCameras();
+        camera.processPowerCells();
     }
 
     /**
@@ -175,8 +178,8 @@ public class Robot extends TimedRobot {
         
                 case kCustomAuto4:
                     // System.out.println("Turn towards Center: " + m_autoSelected);
-                    if (Pi.getHasFoundTarget() && !Auton.getIsAutonDone() && !Auton.getIsScoreReady()) {
-                        auton.centerRobot();
+                    if (Pi.getHasFoundObjective() && !Auton.getIsAutonDone() && !Auton.getIsScoreReady()) {
+                        auton.centerRobot(false);
                     } else {
                         driveTrain.driveTank(0,0);
                         if (!Auton.getIsAutonDone() && !Auton.getIsScoreReady()) {
@@ -193,16 +196,21 @@ public class Robot extends TimedRobot {
                     //     if (Pi.getCentered()) {
                     //         auton.move1Sec();
                     //     } else {
-                    //         auton.centerRobot();
+                    //         auton.centerRobot(false);
                     //     }
                     // }
                     // if (!Pi.getCentered() && Auton.getMove1SecDone()) {
-                    //     auton.centerRobot();
+                    //     auton.centerRobot(false);
                     // } else {
                     //     System.out.println("move1Sec");
                     //     auton.move1Sec();
                     // }
         
+                    break;
+
+                case kCustomAuto5:
+                    pid.autonLoop();
+                    auton.findPowerCells();
                     break;
         
                 case kDefaultAuto:

@@ -32,8 +32,10 @@ public class Auton {
     private static boolean moveHalfSecDone = true;
     private static boolean isAutonDone;
     private static boolean isScoreReady;
+    private static boolean putIngesterDown = true;
 
-    private int step = 1;
+    private int driveStep = 1;
+    private static int autonStep = 1;
 
     public Auton(DriveTrain driveTrain) {
         this.driveTrain = driveTrain;
@@ -42,7 +44,7 @@ public class Auton {
 
     public void autonInit() {
         m_gyro.setFusedHeading(0);
-        step = 1;
+        driveStep = 1;
         m_timer.reset();
         m_timer.start();
         SmartDashboard.putNumber("Gyro Fused Heading", m_gyro.getFusedHeading());
@@ -54,14 +56,14 @@ public class Auton {
     public void autonMove2Sec() {
         double timerValue = m_timer.get();
         SmartDashboard.putString("Auton Mode", "autonMove2Sec");
-        SmartDashboard.putNumber("Auton Step", step);
+        SmartDashboard.putNumber("Auton Step", driveStep);
         SmartDashboard.putNumber("Gyro Fused Heading", m_gyro.getFusedHeading());
         SmartDashboard.putNumber("Timer", timerValue);
-        if ((timerValue < stepTimeC1) && (step == 1)) {
+        if ((timerValue < stepTimeC1) && (driveStep == 1)) {
             driveTrain.driveArcade(0.6, 0.0);
-        } else if ((timerValue > stepTimeC1) && (step == 1)) {
+        } else if ((timerValue > stepTimeC1) && (driveStep == 1)) {
             driveTrain.driveArcade(0, 0);
-            step = 2; // increment step counter, move to next step
+            driveStep = 2; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         } else {
@@ -72,14 +74,14 @@ public class Auton {
     public void move1Sec() {
         double timerValue = m_timer.get();
         SmartDashboard.putString("Auton Mode", "move1Sec");
-        SmartDashboard.putNumber("Auton Step", step);
+        SmartDashboard.putNumber("Auton Step", driveStep);
         SmartDashboard.putNumber("Gyro Fused Heading", m_gyro.getFusedHeading());
         SmartDashboard.putNumber("Timer", timerValue);
-        if ((timerValue < stepTimeC2) && (step == 1)) {
+        if ((timerValue < stepTimeC2) && (driveStep == 1)) {
             driveTrain.driveArcade(0.5, 0.0);
-        } else if ((timerValue > stepTimeC2) && (step == 1)) {
+        } else if ((timerValue > stepTimeC2) && (driveStep == 1)) {
             driveTrain.driveArcade(0, 0);
-            step = 2; // increment step counter, move to next step
+            driveStep = 2; // increment driveStep counter, move to next driveStep
             // Auton.setMove1SecDone(true); // TODO: is this right?
             m_timer.reset();
             m_timer.start();
@@ -87,7 +89,7 @@ public class Auton {
             driveTrain.driveArcade(0, 0);
             System.out.println("move1SecDone = true");
             Auton.setMove1SecDone(true);
-            step = 1;
+            driveStep = 1;
             m_timer.reset();
             m_timer.start();
         }
@@ -96,14 +98,14 @@ public class Auton {
     public void moveHalfSec() {
         double timerValue = m_timer.get();
         SmartDashboard.putString("Auton Mode", "move1Sec");
-        SmartDashboard.putNumber("Auton Step", step);
+        SmartDashboard.putNumber("Auton Step", driveStep);
         SmartDashboard.putNumber("Gyro Fused Heading", m_gyro.getFusedHeading());
         SmartDashboard.putNumber("Timer", timerValue);
-        if ((timerValue < stepTimeC3) && (step == 1)) {
+        if ((timerValue < stepTimeC3) && (driveStep == 1)) {
             driveTrain.driveArcade(0.6, 0.0);
-        } else if ((timerValue > stepTimeC3) && (step == 1)) {
+        } else if ((timerValue > stepTimeC3) && (driveStep == 1)) {
             driveTrain.driveArcade(0, 0);
-            step = 2; // increment step counter, move to next step
+            driveStep = 2; // increment driveStep counter, move to next driveStep
             // Auton.setMove1SecDone(true); // TODO: is this right?
             m_timer.reset();
             m_timer.start();
@@ -112,7 +114,7 @@ public class Auton {
             System.out.println("moveHalfSecDone = true");
             Auton.setMoveHalfSecDone(true);
             Auton.setIsScoreReady(true);
-            step = 1;
+            driveStep = 1;
             m_timer.reset();
             m_timer.start();
         }
@@ -120,11 +122,11 @@ public class Auton {
 
     public void score() {
         double timerValue = m_timer.get();
-        if ((timerValue < stepTimeC3) && (step == 1)) {
+        if ((timerValue < stepTimeC3) && (driveStep == 1)) {
             ingester.ingesterAuton(-1.0);
-        } else if ((timerValue > stepTimeC3) && (step == 1)) {
+        } else if ((timerValue > stepTimeC3) && (driveStep == 1)) {
             ingester.ingesterAuton(0.0);
-            step = 2; // increment step counter, move to next step
+            driveStep = 2; // increment driveStep counter, move to next driveStep
             // Auton.setMove1SecDone(true); // TODO: is this right?
             m_timer.reset();
             m_timer.start();
@@ -132,7 +134,7 @@ public class Auton {
             ingester.ingesterAuton(0.0);
             Auton.setIsScoreReady(false);
             isAutonDone = true;
-            step = 1;
+            driveStep = 1;
             m_timer.reset();
             m_timer.start();
         }
@@ -166,38 +168,46 @@ public class Auton {
         isScoreReady = done;
     }
 
+    public static int getAutonStep() {
+        return autonStep;
+    }
+
+    public static boolean getPutIngesterDown() {
+        return putIngesterDown;
+    }
+
     // Autonomous mode: Robot positioned directly in front of the scoring goal
     // Move fwd to goal, score, get out of the way
     public void autonFrontGoal() {
         SmartDashboard.putString("Auton Mode", "autonFrontGoal");
-        SmartDashboard.putNumber("Auton Step", step);
+        SmartDashboard.putNumber("Auton Step", driveStep);
         SmartDashboard.putNumber("Gyro Fused Heading", m_gyro.getFusedHeading());
         SmartDashboard.putNumber("Timer", m_timer.get());
-        if ((m_timer.get() < stepTimeA1) && (step == 1)) {
+        if ((m_timer.get() < stepTimeA1) && (driveStep == 1)) {
             driveTrain.driveArcade(0.6, 0.0);
-        } else if ((m_timer.get() > stepTimeA1) && (step == 1)) {
+        } else if ((m_timer.get() > stepTimeA1) && (driveStep == 1)) {
             driveTrain.driveArcade(0, 0);
-            step = 2; // increment step counter, move to next step
+            driveStep = 2; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         } else {
             driveTrain.driveArcade(0, 0);
         }
 
-        if ((m_timer.get() < stepTimeA2) && (step == 2)) {
+        if ((m_timer.get() < stepTimeA2) && (driveStep == 2)) {
             ingester.ingesterAuton(-1.0);
-        } else if ((m_timer.get() > stepTimeA2) && (step == 2)) {
+        } else if ((m_timer.get() > stepTimeA2) && (driveStep == 2)) {
             ingester.ingesterAuton(0.0);
-            step = 3; // increment step counter, move to next step
+            driveStep = 3; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         }
 
-        if ((m_timer.get() < stepTimeA3) && (step == 3)) {
+        if ((m_timer.get() < stepTimeA3) && (driveStep == 3)) {
             driveTrain.driveArcade(-0.6, 0.45);
-        } else if ((m_timer.get() > stepTimeA3) && (step == 3)) {
+        } else if ((m_timer.get() > stepTimeA3) && (driveStep == 3)) {
             driveTrain.driveArcade(0, 0);
-            step = 4; // increment step counter, move to next step
+            driveStep = 4; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         } else {
@@ -210,80 +220,80 @@ public class Auton {
     // get out of the way
     public void autonLeftGoal() {
         SmartDashboard.putString("Auton Mode", "autonLeftGoal");
-        SmartDashboard.putNumber("Auton Step", step);
+        SmartDashboard.putNumber("Auton Step", driveStep);
         SmartDashboard.putNumber("Gyro Fused Heading", m_gyro.getFusedHeading() % 360);
         SmartDashboard.putNumber("Timer", m_timer.get());
-        if ((m_timer.get() < stepTimeB1) && (step == 1)) {
+        if ((m_timer.get() < stepTimeB1) && (driveStep == 1)) {
             driveTrain.driveArcade(0.6, 0.0);
-        } else if ((m_timer.get() > stepTimeB1) && (step == 1)) {
+        } else if ((m_timer.get() > stepTimeB1) && (driveStep == 1)) {
             driveTrain.driveArcade(0, 0);
-            step = 2; // increment step counter, move to next step
+            driveStep = 2; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         } else {
             driveTrain.driveArcade(0, 0);
         }
 
-        if (step == 2) {
+        if (driveStep == 2) {
             driveTrain.driveArcade(0.3, 0.6);
         }
 
-        if (((m_gyro.getFusedHeading() % 360) < -85) && (step == 2)) {
+        if (((m_gyro.getFusedHeading() % 360) < -85) && (driveStep == 2)) {
             driveTrain.driveArcade(0, 0);
-            step = 3; // increment step counter, move to next step
+            driveStep = 3; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         } else {
             driveTrain.driveArcade(0, 0);
         }
 
-        if ((m_timer.get() < stepTimeB3) && (step == 3)) {
+        if ((m_timer.get() < stepTimeB3) && (driveStep == 3)) {
             driveTrain.driveArcade(0.5, 0.0);
-        } else if ((m_timer.get() > stepTimeB3) && (step == 3)) {
+        } else if ((m_timer.get() > stepTimeB3) && (driveStep == 3)) {
             ingester.ingesterAuton(0.0);
-            step = 4; // increment step counter, move to next step
+            driveStep = 4; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         }
 
-        if (step == 4) {
+        if (driveStep == 4) {
             driveTrain.driveArcade(0.3, -0.6);
         }
 
-        if (((m_gyro.getFusedHeading() % 360) > -5) && (step == 4)) {
+        if (((m_gyro.getFusedHeading() % 360) > -5) && (driveStep == 4)) {
             driveTrain.driveArcade(0, 0);
-            step = 5; // increment step counter, move to next step
+            driveStep = 5; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         } else {
             driveTrain.driveArcade(0, 0);
         }
 
-        if ((m_timer.get() < stepTimeB5) && (step == 5)) {
+        if ((m_timer.get() < stepTimeB5) && (driveStep == 5)) {
             driveTrain.driveArcade(0.6, 0);
-        } else if ((m_timer.get() > stepTimeB5) && (step == 5)) {
+        } else if ((m_timer.get() > stepTimeB5) && (driveStep == 5)) {
             driveTrain.driveArcade(0, 0);
-            step = 6; // increment step counter, move to next step
+            driveStep = 6; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         } else {
             driveTrain.driveArcade(0, 0);
         }
 
-        if ((m_timer.get() < stepTimeB6) && (step == 6)) {
+        if ((m_timer.get() < stepTimeB6) && (driveStep == 6)) {
             ingester.ingesterAuton(-1.0);
-        } else if ((m_timer.get() > stepTimeB6) && (step == 6)) {
+        } else if ((m_timer.get() > stepTimeB6) && (driveStep == 6)) {
             ingester.ingesterAuton(0.0);
-            step = 7; // increment step counter, move to next step
+            driveStep = 7; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         }
 
-        if ((m_timer.get() < stepTimeB7) && (step == 7)) {
+        if ((m_timer.get() < stepTimeB7) && (driveStep == 7)) {
             driveTrain.driveArcade(-0.6, 0.3);
-        } else if ((m_timer.get() > stepTimeB7) && (step == 7)) {
+        } else if ((m_timer.get() > stepTimeB7) && (driveStep == 7)) {
             driveTrain.driveArcade(0, 0);
-            step = 8; // increment step counter, move to next step
+            driveStep = 8; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         } else {
@@ -296,80 +306,80 @@ public class Auton {
     // get out of the way
     public void autonRightGoal() {
         SmartDashboard.putString("Auton Mode", "autonRightGoal");
-        SmartDashboard.putNumber("Auton Step", step);
+        SmartDashboard.putNumber("Auton Step", driveStep);
         SmartDashboard.putNumber("Gyro Fused Heading", m_gyro.getFusedHeading() % 360);
         SmartDashboard.putNumber("Timer", m_timer.get());
-        if ((m_timer.get() < stepTimeB1) && (step == 1)) {
+        if ((m_timer.get() < stepTimeB1) && (driveStep == 1)) {
             driveTrain.driveArcade(0.6, 0.0);
-        } else if ((m_timer.get() > stepTimeB1) && (step == 1)) {
+        } else if ((m_timer.get() > stepTimeB1) && (driveStep == 1)) {
             driveTrain.driveArcade(0, 0);
-            step = 2; // increment step counter, move to next step
+            driveStep = 2; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         } else {
             driveTrain.driveArcade(0, 0);
         }
 
-        if (step == 2) {
+        if (driveStep == 2) {
             driveTrain.driveArcade(0.3, -0.6);
         }
 
-        if (((m_gyro.getFusedHeading() % 360) > 85) && (step == 2)) {
+        if (((m_gyro.getFusedHeading() % 360) > 85) && (driveStep == 2)) {
             driveTrain.driveArcade(0, 0);
-            step = 3; // increment step counter, move to next step
+            driveStep = 3; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         } else {
             driveTrain.driveArcade(0, 0);
         }
 
-        if ((m_timer.get() < stepTimeB3) && (step == 3)) {
+        if ((m_timer.get() < stepTimeB3) && (driveStep == 3)) {
             driveTrain.driveArcade(0.5, 0.0);
-        } else if ((m_timer.get() > stepTimeB3) && (step == 3)) {
+        } else if ((m_timer.get() > stepTimeB3) && (driveStep == 3)) {
             ingester.ingesterAuton(0.0);
-            step = 4; // increment step counter, move to next step
+            driveStep = 4; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         }
 
-        if (step == 4) {
+        if (driveStep == 4) {
             driveTrain.driveArcade(0.3, 0.6);
         }
 
-        if (((m_gyro.getFusedHeading() % 360) < 5) && (step == 4)) {
+        if (((m_gyro.getFusedHeading() % 360) < 5) && (driveStep == 4)) {
             driveTrain.driveArcade(0, 0);
-            step = 5; // increment step counter, move to next step
+            driveStep = 5; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         } else {
             driveTrain.driveArcade(0, 0);
         }
 
-        if ((m_timer.get() < stepTimeB5) && (step == 5)) {
+        if ((m_timer.get() < stepTimeB5) && (driveStep == 5)) {
             driveTrain.driveArcade(0.6, 0);
-        } else if ((m_timer.get() > stepTimeB5) && (step == 5)) {
+        } else if ((m_timer.get() > stepTimeB5) && (driveStep == 5)) {
             driveTrain.driveArcade(0, 0);
-            step = 6; // increment step counter, move to next step
+            driveStep = 6; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         } else {
             driveTrain.driveArcade(0, 0);
         }
 
-        if ((m_timer.get() < stepTimeB6) && (step == 6)) {
+        if ((m_timer.get() < stepTimeB6) && (driveStep == 6)) {
             ingester.ingesterAuton(-1.0);
-        } else if ((m_timer.get() > stepTimeB6) && (step == 6)) {
+        } else if ((m_timer.get() > stepTimeB6) && (driveStep == 6)) {
             ingester.ingesterAuton(0.0);
-            step = 7; // increment step counter, move to next step
+            driveStep = 7; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         }
 
-        if ((m_timer.get() < stepTimeB7) && (step == 7)) {
+        if ((m_timer.get() < stepTimeB7) && (driveStep == 7)) {
             driveTrain.driveArcade(-0.6, -0.3);
-        } else if ((m_timer.get() > stepTimeB7) && (step == 7)) {
+        } else if ((m_timer.get() > stepTimeB7) && (driveStep == 7)) {
             driveTrain.driveArcade(0, 0);
-            step = 8; // increment step counter, move to next step
+            driveStep = 8; // increment driveStep counter, move to next driveStep
             m_timer.reset();
             m_timer.start();
         } else {
@@ -377,7 +387,7 @@ public class Auton {
         }
     }
     
-    public void centerRobot() {
+    public void centerRobot(boolean isFindingPowerCells) {
         // System.out.println("centering robot");
         if (Pi.getMoveLeft()) {
             driveTrain.driveTank(-0.2, 0.2);
@@ -388,13 +398,23 @@ public class Auton {
         } else {
             driveTrain.driveTank(0, 0);
             System.out.println("not turning");
-            System.out.println("move1SecDone = false");
-            Auton.setMove1SecDone(false);
+            // System.out.println("move1SecDone = false");
+            if (!isFindingPowerCells)
+                Auton.setMove1SecDone(false);
         }
     }
 
-    public void centerAndMove() {
-        
+    public void findPowerCells() {
+        switch(autonStep) {
+            case 1:
+                centerRobot(true);
+                // autonStep++;
+                break;
+
+            default:
+                break;
+            
+        }
     }
 
 }
